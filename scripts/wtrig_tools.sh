@@ -1,8 +1,5 @@
 #!/bin/sh
 
-GH_USER="sifive-eblot"
-GH_BRANCH="gh_remote_event"
-
 CURL_LOG=""
 
 cleanup () {
@@ -20,17 +17,19 @@ die() {
 usage () {
     NAME=`basename $0`
     cat <<EOT
-$NAME [-h] <-b branch> <-u user> <-t token_file> <-w workflow>
+$NAME [-h] <-b branch> <-u user> <-t token_file> <-w workflow> [-r repo]
 
   branch:     git branch to run the workflow on
-  user:       github username
+  repo:       alternative repo (default: ${GH_REPO})
   token_file: private file with github token
+  user:       github username
   workflow:   workflow name to trigger (w/o .yml suffix)
 
 -h:  print this help
 EOT
 }
 
+GH_REPO="testenv-tools"
 GH_BRANCH=""
 GH_USER=""
 GH_WKFLOW=""
@@ -39,10 +38,15 @@ while [ $# -gt 0 ]; do
     case "$1" in
         -h)
             usage
+            exit 0
             ;;
         -b)
             shift
             GH_BRANCH="$1"
+            ;;
+        -r)
+            shift
+            GH_REPO="$1"
             ;;
         -u)
             shift
@@ -89,7 +93,7 @@ fi
 set -eu
 
 PAYLOAD="{\"ref\": \"${GH_BRANCH}\"}"
-URL="https://api.github.com/repos/sifive/testenv-metal/actions/workflows/${GH_WKFLOW}.yml/dispatches"
+URL="https://api.github.com/repos/sifive/${GH_REPO}/actions/workflows/${GH_WKFLOW}.yml/dispatches"
 
 CURL_LOG=$(mktemp)
 trap cleanup EXIT
