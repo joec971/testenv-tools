@@ -16,6 +16,9 @@ jobs:
         name: Toolchain
         runs-on: self-hosted  #, ubuntu-latest, should be changed (security issue)
         steps:
+            - uses: actions/checkout@v2
+              with:
+                submodules: false
 
             - name: Build a docker image with LLVM project source
               run: docker build -f docker/src/clang-${LLVM_MAJVER}.dockerfile -t clang:${LLVM_VERSION} docker/src
