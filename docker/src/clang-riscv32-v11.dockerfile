@@ -1,7 +1,7 @@
-FROM clang:v11.0.0-rc3 as clang
+FROM clang:v11.0.0 as clang
 FROM newlib:v3.3.0 as newlib
 
-FROM llvm-riscv:a3.12-v11.0.0-rc3 as builder
+FROM llvm-riscv:a3.12-v11.0.0 as builder
 RUN apk update
 RUN apk add build-base ninja cmake git patch vim python3 curl
 COPY --from=clang /toolchain/llvm /toolchain/llvm
@@ -30,7 +30,7 @@ COPY --from=builder ${CLANG11PATH}/${xtarget} \
      ${CLANG11PATH}/${xtarget}
 WORKDIR /
 
-# docker build -f clang-riscv32-v11.dockerfile -t clang-riscv32:a3.12-v11.0.0-rc3 .
-# docker tag clang-riscv32:a3.12-v11.0.0-rc3 sifive/clang-riscv32:a3.12-v11.0.0-rc3
+# docker build -f clang-riscv32-v11.dockerfile -t clang-riscv32:a3.12-v11.0.0 .
+# docker tag clang-riscv32:a3.12-v11.0.0 sifive/clang-riscv32:a3.12-v11.0.0
 
 

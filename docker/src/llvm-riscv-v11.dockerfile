@@ -1,4 +1,4 @@
-FROM clang:v11.0.0-rc3
+FROM clang:v11.0.0
 ENV CLANG11PATH=/usr/local/clang11
 LABEL description="Build a LLVM/Clang 11 toolchain for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com"
@@ -38,4 +38,4 @@ WORKDIR /
 # on is therefore never pushed to the docker hub, as it only lasts for the
 # time required to build the toolchain itself
 
-# docker build -f llvm-riscv-v11.dockerfile -t llvm-riscv:a3.12-v11.0.0-rc3 .
+# docker build -f llvm-riscv-v11.dockerfile -t llvm-riscv:a3.12-v11.0.0 .

@@ -1,4 +1,4 @@
-FROM llvm-riscv:a3.12-v11.0.0-rc3 as source
+FROM llvm-riscv:a3.12-v11.0.0 as source
 
 FROM alpine:3.12
 LABEL description="RISC-V toolchain"
@@ -22,5 +22,5 @@ WORKDIR /
 #   target application, saving image storage footprint
 # This dockerfile is dedicated to build the second, enlightened one.
 
-# docker build -f clang-riscv-v11.dockerfile -t clang-riscv:a3.12-v11.0.0-rc3 .
-# docker tag clang-riscv:a3.12-v11.0.0-rc3 sifive/clang-riscv:a3.12-v11.0.0-rc3
+# docker build -f clang-riscv-v11.dockerfile -t clang-riscv:a3.12-v11.0.0 .
+# docker tag clang-riscv:a3.12-v11.0.0 sifive/clang-riscv:a3.12-v11.0.0
