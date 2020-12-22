@@ -5,7 +5,8 @@ set -ex
 if [ -z "${xlen}" ]; then
     echo "xlen not defined" >&2
     exit 1
-elif [ ${xlen} -eq 64 ]; then
+fi
+if [ ${xlen} -eq 64 ]; then
     xabi="lp"
     xmodel="-mcmodel=medany"
 elif [ ${xlen} -eq 32 ]; then
@@ -65,7 +66,7 @@ for abi in i ia iac im imac iaf iafd imf imfd imafc imafdc; do
     echo "--- cleanup ---"
     rm -rf /toolchain/build
 
-    echo "--- newlib ${xarch} ---"
+    echo "--- newlib ${xarch}/${xabi}${xlen}${fp} ---"
     mkdir -p /toolchain/build/newlib
     cd /toolchain/build/newlib
     /toolchain/newlib/configure              \
@@ -93,7 +94,7 @@ for abi in i ia iac im imac iaf iafd imf imfd imafc imafdc; do
     mv ${xsysroot}/${xtarget}/* ${xsysroot}/
     rmdir ${xsysroot}/${xtarget}
 
-    echo "--- compiler-rt ${xarch} ---"
+    echo "--- compiler-rt ${xarch}/${xabi}${xlen}${fp} ---"
     mkdir -p /toolchain/build/compiler-rt
     cd /toolchain/build/compiler-rt
     cmake                                               \
