@@ -13,6 +13,7 @@ docker run \
 	--env ORGANIZATION=sifive \
 	--env ACCESS_TOKEN="$(cat ${PAT})" \
 	--name gha-runner \
+        -u docker:$(grep docker /etc/group | cut -d: -f3) \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	gha-runner:2.273.5
 
