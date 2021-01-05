@@ -2,7 +2,7 @@
 # Build an small image base for compiling/building bare metal target software
 # Note that toolchain is not contained in this image
 #-------------------------------------------------------------------------------
-FROM alpine:3.12.1
+FROM alpine:3.12.3
 
 ENV CLANG11PATH=/usr/local/clang11
 ENV BU235PATH=/usr/local/riscv-elf-binutils

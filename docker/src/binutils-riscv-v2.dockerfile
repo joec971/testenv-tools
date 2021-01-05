@@ -1,4 +1,4 @@
-FROM alpine:3.12 as builder
+FROM alpine:3.12.3 as builder
 LABEL description="Build binutils for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
@@ -23,11 +23,11 @@ RUN ../binutils-2.35.1/configure \
     --enable-lto \
     --disable-werror \
     --disable-debug
-RUN make
+RUN make -j$(nproc)
 RUN make install
 WORKDIR /
 
-FROM alpine:3.12
+FROM alpine:3.12.3
 LABEL description="RISC-V binutils"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 COPY --from=builder /usr/local/riscv-elf-binutils /usr/local/riscv-elf-binutils

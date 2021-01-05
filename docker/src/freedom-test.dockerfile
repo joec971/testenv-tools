@@ -2,7 +2,7 @@
 # Build an small image base to perform unit test with a QEMU virtual machine
 # Note that QEMU VM is not contained in this image
 #-------------------------------------------------------------------------------
-FROM alpine:3.12.1
+FROM alpine:3.12.3
 
 ENV QEMUPATH=/usr/local/qemu-fdt
 ENV PATH=$PATH:${QEMUPATH}/bin

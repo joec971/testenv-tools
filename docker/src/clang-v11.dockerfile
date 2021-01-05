@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM alpine:3.12.3
 LABEL description="Store Git repository for LLVM/Clang 11 toolchain"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
