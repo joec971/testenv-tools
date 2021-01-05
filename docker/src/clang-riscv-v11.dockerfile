@@ -1,6 +1,6 @@
 FROM llvm-riscv:a3.12-v11.0.0 as source
 
-FROM alpine:3.12
+FROM alpine:3.12.3
 LABEL description="RISC-V toolchain"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 ENV CLANG11PATH=/usr/local/clang11
