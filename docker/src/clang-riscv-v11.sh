@@ -26,7 +26,14 @@ if [ -z "${prefix}" ]; then
 fi
 
 host=$(cc -dumpmachine)
-xopts="-g -Os"
+if [ -n "${build}" -a "${build}" = "DEBUG" ]; then
+    xopts="-g -Og"
+    debug_build=1
+else
+    xopts="-Os"
+    debug_build=0
+fi
+
 xcfeatures="-ffunction-sections -fdata-sections -fno-stack-protector -fvisibility=hidden"
 xcxxfeatures="${xcfeatures} -fno-use-cxa-atexit"
 
@@ -41,15 +48,47 @@ export RANLIB_FOR_TARGET="${CLANG11PATH}/bin/llvm-ranlib"
 export READELF_FOR_TARGET="${CLANG11PATH}/bin/llvm-readelf"
 export AS_FOR_TARGET="${CLANG11PATH}/bin/clang"
 
+newlib_default="\
+    --disable-malloc-debugging              \
+    --disable-newlib-atexit-dynamic-alloc   \
+    --disable-newlib-fseek-optimization     \
+    --disable-newlib-fvwrite-in-streamio    \
+    --disable-newlib-iconv                  \
+    --disable-newlib-mb                     \
+    --disable-newlib-supplied-syscalls      \
+    --disable-newlib-wide-orient            \
+    --disable-nls                           \
+    --enable-lite-exit                      \
+    --enable-newlib-multithread             \
+    --enable-newlib-reent-small             \
+    --enable-newlib-nano-malloc             \
+    --enable-newlib-global-atexit           \
+    --disable-newlib-unbuf-stream-opt"
+newlib_nofp="--disable-newlib-io-float"
+if [ -z "${NEWLIB_NANO_IO}" ]; then
+    # default to larger printf family functions, with C99 support
+    newlib_io="\
+        --enable-newlib-io-long-long        \
+        --enable-newlib-io-c99-formats      \
+        --disable-newlib-io-long-double     \
+        --disable-newlib-nano-formatted-io"
+else
+    newlib_io="--disable-newlib-nano-formatted-io"
+fi
+
 jobs=$(nproc)
 
 for abi in i ia iac im imac iaf iafd imf imfd imafc imafdc; do
     if echo "${abi}" | grep -q "d"; then
         fp="d"
+        newlib_float=""
     elif echo "${abi}" | grep -q "f"; then
         fp="f"
+        newlib_float=""
     else
         fp=""
+        # assume no float support, not even soft-float in printf functions. YMMV
+        newlib_float="${newlib_nofp}"
     fi
 
     xarch="rv${xlen}${abi}"
@@ -60,43 +99,31 @@ for abi in i ia iac im imac iaf iafd imf imfd imafc imafdc; do
     xcxx_lib="-L${xsysroot}/lib"
     xcflags="${xctarget} ${xopts} ${xcfeatures}"
     xcxxflags="${xctarget} ${xopts} ${xcxxfeatures} ${xcxxdefs} ${xcxx_inc}"
-
-    export "CFLAGS_FOR_TARGET"="-target ${xtarget} ${xcflags} -Wno-unused-command-line-argument"
+    buildpath="/toolchain/build"
 
     echo "--- cleanup ---"
-    rm -rf /toolchain/build
+    rm -rf ${buildpath}
 
     echo "--- newlib ${xarch}/${xabi}${xlen}${fp} ---"
-    mkdir -p /toolchain/build/newlib
-    cd /toolchain/build/newlib
-    /toolchain/newlib/configure              \
-        --host=${host}                       \
-        --build=${host}                      \
-        --target=${xtarget}                  \
-        --prefix=${xsysroot}                 \
-        --disable-newlib-supplied-syscalls   \
-        --enable-newlib-reent-small          \
-        --disable-newlib-fvwrite-in-streamio \
-        --disable-newlib-fseek-optimization  \
-        --disable-newlib-wide-orient         \
-        --enable-newlib-nano-malloc          \
-        --disable-newlib-unbuf-stream-opt    \
-        --enable-lite-exit                   \
-        --enable-newlib-global-atexit        \
-        --disable-newlib-nano-formatted-io   \
-        --disable-newlib-fvwrite-in-streamio \
-        --enable-newlib-io-c99-formats       \
-        --enable-newlib-io-float             \
-        --disable-newlib-io-long-double      \
-        --disable-nls
+    mkdir -p ${buildpath}/newlib
+    xncflags="${xcflags} -fdebug-prefix-map=/toolchain/newlib=${prefix}/${xtarget}"
+    export CFLAGS_FOR_TARGET="-target ${xtarget} ${xncflags} -Wno-unused-command-line-argument"
+    cd ${buildpath}/newlib
+    /toolchain/newlib/configure                 \
+        --host=${host}                          \
+        --build=${host}                         \
+        --target=${xtarget}                     \
+        --prefix=${xsysroot}                    \
+        ${newlib_default} ${newlib_io} ${newlib_float}
     make -j${jobs}
     make -j1 install
     mv ${xsysroot}/${xtarget}/* ${xsysroot}/
     rmdir ${xsysroot}/${xtarget}
 
     echo "--- compiler-rt ${xarch}/${xabi}${xlen}${fp} ---"
-    mkdir -p /toolchain/build/compiler-rt
-    cd /toolchain/build/compiler-rt
+    mkdir -p ${buildpath}/compiler-rt
+    xcrtflags="${xcflags} -fdebug-prefix-map=/toolchain/llvm/compiler-rt=${prefix}/${xtarget}/compiler-rt"
+    cd ${buildpath}/compiler-rt
     cmake                                               \
       -G Ninja                                          \
       -DCMAKE_INSTALL_PREFIX=${xsysroot}                \
@@ -115,10 +142,10 @@ for abi in i ia iac im imac iaf iafd imf imfd imafc imafdc; do
       -DCMAKE_ASM_COMPILER_TARGET=${xtarget}            \
       -DCMAKE_SYSROOT=${xsysroot}                       \
       -DCMAKE_SYSROOT_LINK=${xsysroot}                  \
-      -DCMAKE_C_FLAGS=${xcflags}                        \
-      -DCMAKE_ASM_FLAGS=${xcflags}                      \
-      -DCMAKE_CXX_FLAGS=${xcflags}                      \
-      -DCMAKE_EXE_LINKER_FLAGS=-L${xsysroot}/lib        \
+      -DCMAKE_C_FLAGS="${xcrtflags}"                    \
+      -DCMAKE_ASM_FLAGS="${xcrtflags}"                  \
+      -DCMAKE_CXX_FLAGS="${xcrtflags}"                  \
+      -DCMAKE_EXE_LINKER_FLAGS="-L${xsysroot}/lib"      \
       -DLLVM_CONFIG_PATH=${CLANG11PATH}/bin/llvm-config \
       -DLLVM_DEFAULT_TARGET_TRIPLE=${xtarget}           \
       -DLLVM_TARGETS_TO_BUILD=RISCV                     \
@@ -140,4 +167,30 @@ for abi in i ia iac im imac iaf iafd imf imfd imafc imafdc; do
 
     mv ${xsysroot}/lib/baremetal/* ${xsysroot}/lib
     rmdir ${xsysroot}/lib/baremetal
+
+    if [ ${debug_build} -ne 0 ]; then
+        # extract the list of actually used source files, so they can be copied
+        # into the destination tree (so that it is possible to step-debug in
+        # the system libraries)
+        llvm-dwarfdump ${xsysroot}/lib/*.a | grep DW_AT_decl_file | \
+        tr -d ' ' | cut -d'"' -f2 >> ${buildpath}/srcfiles.tmp
+    fi
 done
+
+if [ ${debug_build} -ne 0 ]; then
+    # newlib/ files and compiler-rt are handled one after another, as newlib
+    # as an additional directory level
+    echo "--- library source files ---"
+    sort -u ${buildpath}/srcfiles.tmp | grep -E '/(newlib|libgloss)/' | \
+      sed "s%^${prefix}/${xtarget}/%%" |
+      (cd /toolchain/newlib; xargs -n 1 realpath --relative-to .) \
+         > ${buildpath}/newlib.files
+    sort -u ${buildpath}/srcfiles.tmp | grep -E '/compiler-rt/' |
+      sed "s%^${prefix}/${xtarget}/%%" > ${buildpath}/compiler-rt.files
+    sort -u ${buildpath}/srcfiles.tmp
+    rm ${buildpath}/srcfiles.tmp
+    tar cf - -C /toolchain/newlib -T ${buildpath}/newlib.files | \
+      tar xf - -C ${prefix}/${xtarget}
+    tar cf - -C /toolchain/llvm -T ${buildpath}/compiler-rt.files | \
+      tar xf - -C ${prefix}/${xtarget}
+fi

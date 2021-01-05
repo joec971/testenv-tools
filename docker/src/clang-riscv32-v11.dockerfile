@@ -3,7 +3,9 @@ FROM newlib:v3.3.0 as newlib
 
 FROM llvm-riscv:a3.12-v11.0.0 as builder
 RUN apk update
-RUN apk add build-base ninja cmake git patch vim python3 curl
+RUN apk del ninja
+RUN apk upgrade
+RUN apk add build-base ninja cmake git patch vim python3 curl coreutils
 COPY --from=clang /toolchain/llvm /toolchain/llvm
 COPY --from=newlib /toolchain/newlib /toolchain/newlib
 WORKDIR /toolchain
@@ -11,6 +13,7 @@ WORKDIR /toolchain
 ENV CLANG11PATH=/usr/local/clang11
 ENV xlen=32
 ENV xtarget="riscv${xlen}-unknown-elf"
+# ENV build=DEBUG
 ENV prefix=${CLANG11PATH}
 
 RUN ln -s /usr/bin/python3 /usr/bin/python
@@ -30,7 +33,7 @@ COPY --from=builder ${CLANG11PATH}/${xtarget} \
      ${CLANG11PATH}/${xtarget}
 WORKDIR /
 
-# docker build -f clang-riscv32-v11.dockerfile -t clang-riscv32:a3.12-v11.0.0 .
-# docker tag clang-riscv32:a3.12-v11.0.0 sifive/clang-riscv32:a3.12-v11.0.0
-
+# docker build -f clang-riscv32-v11.dockerfile -t sifive/clang-riscv32:a3.12-v11.0.0 .
+# if debug:
+#  docker build -f clang-riscv32-v11.dockerfile -t sifive/clang-riscv32_dbg:a3.12-v11.0.0 .
 
