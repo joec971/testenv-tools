@@ -15,7 +15,7 @@ ENV CLANG11PATH=/usr/local/clang11
 ENV xlen=32
 ENV xtarget="riscv${xlen}-unknown-elf"
 # if build=DEBUG, generated library are built with -g -Og, otherwise -Os
-ENV build=DEBUG
+# ENV build=DEBUG
 ENV prefix=${CLANG11PATH}
 
 RUN ln -s /usr/bin/python3 /usr/bin/python
@@ -35,7 +35,7 @@ COPY --from=builder ${CLANG11PATH}/${xtarget} \
      ${CLANG11PATH}/${xtarget}
 WORKDIR /
 
-# docker build -f clang-riscv32-v11.dockerfile -t sifive/clang-riscv32:a3.12-v11.0.0 .
+# docker build -f clang-riscv32-v11.dockerfile -t sifive/clang-riscv32:a3.12-v11.0.0-n4.1 .
 # if debug:
-#  docker build -f clang-riscv32-v11.dockerfile -t sifive/clang-riscv32_dbg:a3.12-v11.0.0 .
+#  docker build -f clang-riscv32-v11.dockerfile -t sifive/clang-riscv32_dbg:a3.12-v11.0.0-n4.1 .
 
