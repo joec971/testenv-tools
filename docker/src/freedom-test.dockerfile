@@ -17,7 +17,6 @@ RUN apk add glib pixman libgcc dtc
 
 # docker build -f freedom-test.dockerfile -t freedom-test:tmp .
 # docker run --name freedom-test_tmp -it freedom-test:tmp /bin/sh -c "exit"
-# docker export freedom-test_tmp | docker import - freedom-test:latest
+# docker export freedom-test_tmp | docker import - sifive/freedom-test:a3.12-v1.1
 # docker rm freedom-test_tmp
 # docker rmi freedom-test:tmp
-# docker tag freedom-test:a3.12-v1.0 sifive/freedom-test:a3.12-v1.0
