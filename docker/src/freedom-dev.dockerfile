@@ -4,10 +4,6 @@
 #-------------------------------------------------------------------------------
 FROM alpine:3.12.3
 
-ENV CLANG11PATH=/usr/local/clang11
-ENV BU235PATH=/usr/local/riscv-elf-binutils
-ENV PATH=$PATH:${CLANG11PATH}/bin:${BU235PATH}/bin
-
 WORKDIR /
 
 LABEL description="Light development environment"
@@ -16,7 +12,7 @@ LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
 RUN apk upgrade
 RUN apk add ninja cmake git curl coreutils
-# if python is installed along with abobe package, an error is triggered
+# if python is installed along with the above packages, an error is triggered
 RUN apk add python3 py3-pip
 # if wheel is installed along with mako, mako does not detect it
 RUN pip3 install wheel

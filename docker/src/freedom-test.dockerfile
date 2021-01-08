@@ -4,19 +4,18 @@
 #-------------------------------------------------------------------------------
 FROM alpine:3.12.3
 
-ENV QEMUPATH=/usr/local/qemu-fdt
-ENV PATH=$PATH:${QEMUPATH}/bin
+LABEL description="Lightweigth test environment for QEMU & FPGA"
+LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 
 WORKDIR /
 
-LABEL description="Lightweigth test environment for QEMU"
-LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
-
 RUN apk update
-RUN apk add glib pixman libgcc dtc
+RUN apk add glib pixman libgcc dtc coreutils libstdc++ mpfr4 libusb libftdi1
+# if python is installed along with the above packages, an error is triggered
+RUN apk add python3 py3-pip
 
 # docker build -f freedom-test.dockerfile -t freedom-test:tmp .
 # docker run --name freedom-test_tmp -it freedom-test:tmp /bin/sh -c "exit"
-# docker export freedom-test_tmp | docker import - sifive/freedom-test:a3.12-v1.1
+# docker export freedom-test_tmp | docker import - sifive/freedom-test:a3.12-v1.3
 # docker rm freedom-test_tmp
 # docker rmi freedom-test:tmp
