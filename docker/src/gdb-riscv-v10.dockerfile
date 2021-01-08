@@ -31,7 +31,6 @@ FROM alpine:3.12.3
 LABEL description="RISC-V GDB"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 COPY --from=builder /usr/local/riscv-elf-gdb /usr/local/riscv-elf-gdb
-ENV PATH=$PATH:/usr/local/riscv-elf-gdb/bin
 WORKDIR /
 
 # docker build -f gdb-riscv-v10.dockerfile -t gdb-riscv:a3.12-v10.1 .
