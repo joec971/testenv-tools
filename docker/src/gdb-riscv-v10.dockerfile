@@ -20,6 +20,7 @@ RUN ../gdb-10.1/configure \
     --without-mpc \
     --without-cloog \
     --with-python3 \
+    --with-expat \
     --enable-lto \
     --disable-werror \
     --disable-debug
