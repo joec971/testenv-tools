@@ -1,5 +1,5 @@
 FROM alpine:3.12.3 as builder
-LABEL description="Build GDB for RISC-V targets"
+LABEL description="Build OpenOCD for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
 RUN apk add build-base autoconf automake libtool pkgconfig texinfo coreutils git
@@ -61,7 +61,7 @@ RUN echo -e "\nGit info" $(git describe) "\n"
 WORKDIR /
 
 FROM alpine:3.12.3
-LABEL description="RISC-V GDB"
+LABEL description="RISC-V OpenOCD"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 COPY --from=builder /usr/local/riscv-openocd /usr/local/riscv-openocd
 # unable to find a way to use Docker wit a non-root user w/ access to USB
