@@ -13,6 +13,7 @@ RUN apk update
 RUN apk add glib pixman libgcc dtc coreutils libstdc++ mpfr4 libusb libusb-compat libftdi1
 # if python is installed along with the above packages, an error is triggered
 RUN apk add python3 py3-pip
+RUN pip3 install pyserial
 
 # docker build -f freedom-test.dockerfile -t freedom-test:tmp .
 # docker run --name freedom-test_tmp -it freedom-test:tmp /bin/sh -c "exit"
