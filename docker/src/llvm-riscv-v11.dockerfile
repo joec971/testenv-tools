@@ -1,9 +1,9 @@
-FROM clang:v11.0.0
+FROM clang:v11.0.1
 ENV CLANG11PATH=/usr/local/clang11
 LABEL description="Build a LLVM/Clang 11 toolchain for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com"
 RUN apk update
-RUN apk add build-base ninja cmake file python3-dev libedit-dev swig
+RUN apk add build-base samurai cmake file python3-dev libedit-dev swig git
 WORKDIR /toolchain/llvm/build
 RUN cmake -G Ninja -Wno-dev \
    -DCMAKE_INSTALL_PREFIX=${CLANG11PATH} \
@@ -38,4 +38,4 @@ WORKDIR /
 # on is therefore never pushed to the docker hub, as it only lasts for the
 # time required to build the toolchain itself
 
-# docker build -f llvm-riscv-v11.dockerfile -t llvm-riscv:a3.12-v11.0.0 .
+# docker build -f llvm-riscv-v11.dockerfile -t llvm-riscv:a3.13-v11.0.1 .

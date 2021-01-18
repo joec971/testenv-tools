@@ -1,4 +1,4 @@
-FROM alpine:3.12.3 as builder
+FROM alpine:3.13 as builder
 LABEL description="Build binutils for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
@@ -27,12 +27,11 @@ RUN make -j$(nproc)
 RUN make install
 WORKDIR /
 
-FROM alpine:3.12.3
+FROM alpine:3.13
 LABEL description="RISC-V binutils"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 COPY --from=builder /usr/local/riscv-elf-binutils /usr/local/riscv-elf-binutils
 ENV PATH=$PATH:/usr/local/riscv-elf-binutils/bin
 WORKDIR /
 
-# docker build -f binutils-riscv-v2.dockerfile -t binutils-riscv:a3.12-v2.35.1 .
-# docker tag binutils-riscv:a3.12-v2.35.1 sifive/binutils-riscv:a3.12-v2.35.1
+# docker build -f binutils-riscv-v2.dockerfile -t sifive/binutils-riscv:a3.13-v2.35.1 .

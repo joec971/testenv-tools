@@ -3,13 +3,13 @@ name: LLVM RISC-V toolchain
 on: workflow_dispatch  # manual dispatch only for now
 
 env:
-    ALPINE_VERSION: a3.12
+    ALPINE_VERSION: a3.13
     BINUTILS_MAJVER: v2
     BINUTILS_VERSION: v2.35.1
     LLVM_MAJVER: v11
-    LLVM_VERSION: v11.0.0
-    NEWLIB_MAJVER: v3
-    NEWLIB_VERSION: v3.3.0
+    LLVM_VERSION: v11.0.1
+    NEWLIB_MAJVER: v4
+    NEWLIB_VERSION: v4.1.0
 
 jobs:
     toolchain-alpine-docker:

@@ -1,8 +1,8 @@
-FROM alpine:3.12.3 as builder
+FROM alpine:3.13 as builder
 LABEL description="Build XC3SPROG"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
-RUN apk add build-base cmake ninja pkgconfig subversion patch 
+RUN apk add build-base cmake samurai pkgconfig subversion patch 
 RUN apk add libusb-dev libusb-compat-dev libftdi1-dev
 WORKDIR /
 RUN svn checkout https://svn.code.sf.net/p/xc3sprog/code/trunk@795 xc3sprog
@@ -17,7 +17,7 @@ RUN ninja install
 RUN strip /usr/local/xc3sprog/bin/*
 WORKDIR /
 
-FROM alpine:3.12.3
+FROM alpine:3.13
 LABEL description="Tool suite to program Xilinx FPGAs, CPLDs, and EEPROM"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 COPY --from=builder /usr/local/xc3sprog /usr/local/xc3sprog
@@ -27,7 +27,7 @@ COPY --from=builder /usr/local/xc3sprog /usr/local/xc3sprog
 RUN chmod +s /usr/local/xc3sprog/bin/*
 WORKDIR /
 
-# docker build -f xc3sprog.dockerfile -t sifive/xc3sprog:a3.12-r795 .
+# docker build -f xc3sprog.dockerfile -t sifive/xc3sprog:a3.13-r795 .
 
 
 

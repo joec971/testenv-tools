@@ -1,12 +1,10 @@
-FROM clang:v11.0.0 as clang
+FROM clang:v11.0.1 as clang
 FROM newlib:v4.1.0 as newlib
 
-FROM llvm-riscv:a3.12-v11.0.0 as builder
+FROM llvm-riscv:a3.13-v11.0.1 as builder
 RUN apk update
-# this is a workaround till llvm-riscv is rebased on Alpine 3.12.3+
-RUN apk del ninja
 RUN apk upgrade
-RUN apk add build-base ninja cmake git patch vim python3 curl coreutils texinfo
+RUN apk add build-base samurai cmake git patch vim python3 curl coreutils texinfo
 COPY --from=clang /toolchain/llvm /toolchain/llvm
 COPY --from=newlib /toolchain/newlib /toolchain/newlib
 WORKDIR /toolchain
@@ -25,7 +23,7 @@ RUN sh /clang-riscv-v11.sh
 
 WORKDIR /
 
-FROM alpine:3.12.3
+FROM alpine:3.13
 LABEL description="RISC-V 64-bit environment"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 ENV CLANG11PATH=/usr/local/clang11
@@ -35,6 +33,6 @@ COPY --from=builder ${CLANG11PATH}/${xtarget} \
      ${CLANG11PATH}/${xtarget}
 WORKDIR /
 
-# docker build -f clang-riscv64-v11.dockerfile -t sifive/clang-riscv64:a3.12-v11.0.0-n4.1 .
+# docker build -f clang-riscv64-v11.dockerfile -t sifive/clang-riscv64:a3.13-v11.0.1-n4.1 .
 # if debug:
-#  docker build -f clang-riscv64-v11.dockerfile -t sifive/clang-riscv64_dbg:a3.12-v11.0.0-n4.1 .
+#  docker build -f clang-riscv64-v11.dockerfile -t sifive/clang-riscv64_dbg:a3.13-v11.0.1-n4.1 .

@@ -1,4 +1,4 @@
-FROM alpine:3.12.3
+FROM alpine:3.13
 LABEL description="Store Git repository for newlib & C runtime libraries"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@free.fr>"
 RUN apk update

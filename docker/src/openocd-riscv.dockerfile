@@ -1,4 +1,4 @@
-FROM alpine:3.12.3 as builder
+FROM alpine:3.13 as builder
 LABEL description="Build OpenOCD for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
@@ -60,7 +60,7 @@ WORKDIR /riscv-openocd
 RUN echo -e "\nGit info" $(git describe) "\n"
 WORKDIR /
 
-FROM alpine:3.12.3
+FROM alpine:3.13
 LABEL description="RISC-V OpenOCD"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 COPY --from=builder /usr/local/riscv-openocd /usr/local/riscv-openocd
@@ -70,5 +70,5 @@ COPY --from=builder /usr/local/riscv-openocd /usr/local/riscv-openocd
 RUN chmod +s /usr/local/riscv-openocd/bin/openocd
 WORKDIR /
 
-# docker build -f openocd-riscv.dockerfile -t openocd-riscv:a3.12-tmp .
-# docker tag openocd-riscv:a3.12-tmp sifive/openocd-riscv:a3.12-SHA .
+# docker build -f openocd-riscv.dockerfile -t openocd-riscv:a3.13-tmp .
+# docker tag openocd-riscv:a3.13-tmp sifive/openocd-riscv:a3.13-SHA .

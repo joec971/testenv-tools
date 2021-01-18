@@ -1,4 +1,4 @@
-FROM alpine:3.12.3 as builder
+FROM alpine:3.13 as builder
 LABEL description="Build GDB for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
@@ -28,10 +28,10 @@ RUN make -j$(nproc)
 RUN make install
 WORKDIR /
 
-FROM alpine:3.12.3
+FROM alpine:3.13
 LABEL description="RISC-V GDB"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 COPY --from=builder /usr/local/riscv-elf-gdb /usr/local/riscv-elf-gdb
 WORKDIR /
 
-# docker build -f gdb-riscv-v10.dockerfile -t sifive/gdb-riscv:a3.12-v10.1 .
+# docker build -f gdb-riscv-v10.dockerfile -t sifive/gdb-riscv:a3.13-v10.1 .
