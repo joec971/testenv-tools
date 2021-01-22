@@ -10,7 +10,7 @@ LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 WORKDIR /
 
 RUN apk update
-RUN apk add glib pixman libgcc dtc coreutils libstdc++ mpfr4 libusb libusb-compat libftdi1
+RUN apk add glib pixman libgcc dtc coreutils libstdc++ mpfr4 ncurses libusb libusb-compat libftdi1
 # if python is installed along with the above packages, an error is triggered
 RUN apk add python3 py3-pip
 RUN pip3 install pyserial
