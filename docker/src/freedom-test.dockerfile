@@ -10,13 +10,13 @@ LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 WORKDIR /
 
 RUN apk update
-RUN apk add glib pixman libgcc dtc coreutils libstdc++ mpfr4 libusb libusb-compat libftdi1
+RUN apk add glib pixman libgcc dtc coreutils mpfr4 xz libstdc++ libusb libusb-compat libftdi1
 # if python is installed along with the above packages, an error is triggered
 RUN apk add python3 py3-pip
 RUN pip3 install pyserial
 
 # docker build -f freedom-test.dockerfile -t freedom-test:tmp .
 # docker run --name freedom-test_tmp -it freedom-test:tmp /bin/sh -c "exit"
-# docker export freedom-test_tmp | docker import - sifive/freedom-test:a3.13-v1.0
+# docker export freedom-test_tmp | docker import - sifive/freedom-test:a3.13-v1.1
 # docker rm freedom-test_tmp
 # docker rmi freedom-test:tmp
