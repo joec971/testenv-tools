@@ -11,7 +11,7 @@ LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 
 RUN apk update
 RUN apk upgrade
-RUN apk add samurai cmake git curl coreutils
+RUN apk add samurai cmake git curl coreutils libstdc++ ncurses
 # if python is installed along with the above packages, an error is triggered
 RUN apk add python3 py3-pip
 # if wheel is installed along with mako, mako does not detect it
