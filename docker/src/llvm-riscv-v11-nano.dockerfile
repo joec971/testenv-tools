@@ -10,6 +10,7 @@ WORKDIR ${CLANG11PATH}
 COPY --from=source ${CLANG11PATH}/bin/llvm-addr2line \
                    ${CLANG11PATH}/bin/llvm-dwarfdump \
                    ${CLANG11PATH}/bin/llvm-nm \
+                   ${CLANG11PATH}/bin/llvm-strings \
     ${CLANG11PATH}/bin/
 WORKDIR /
 
