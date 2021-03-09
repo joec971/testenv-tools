@@ -10,7 +10,7 @@ LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 WORKDIR /
 
 RUN apk update
-RUN apk add glib pixman libgcc dtc coreutils mpfr4 xz libstdc++ ncurses libusb libusb-compat libftdi1 libgmp eudev
+RUN apk add glib gmp pixman libgcc dtc coreutils mpfr4 xz libstdc++ ncurses libusb libusb-compat libftdi1 eudev
 # if python is installed along with the above packages, an error is triggered
 RUN apk add python3 py3-pip
 RUN pip3 install pyserial pyftdi junitparser
