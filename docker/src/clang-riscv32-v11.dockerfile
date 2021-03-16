@@ -1,5 +1,5 @@
-FROM clang:v11.0.1 as clang
-FROM newlib:v4.1.0 as newlib
+FROM clang-src:v11.0.1 as clang
+FROM newlib-src:v4.1.0 as newlib
 
 FROM llvm-riscv:a3.13-v11.0.1 as builder
 RUN apk update

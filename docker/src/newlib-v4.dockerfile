@@ -11,4 +11,4 @@ RUN curl -LO ftp://sourceware.org/pub/newlib/newlib-4.1.0.tar.gz && \
      mv newlib-4.1.0 newlib
 WORKDIR /
 
-# docker build -f newlib-v4.dockerfile -t newlib:v4.1.0 .
+# docker build -f newlib-v4.dockerfile -t newlib-src:v4.1.0 .
