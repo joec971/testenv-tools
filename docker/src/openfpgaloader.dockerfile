@@ -12,6 +12,7 @@ RUN cmake -G Ninja -Wno-dev -DCMAKE_INSTALL_PREFIX=/usr/local/openfpgaloader ..
 RUN ninja
 RUN ninja install
 RUN strip /usr/local/openfpgaloader/bin/*
+RUN git rev-parse --short HEAD
 WORKDIR /
 
 FROM alpine:3.13
