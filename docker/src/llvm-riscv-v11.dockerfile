@@ -1,4 +1,4 @@
-FROM clang:v11.0.1
+FROM clang-src:v11.0.1
 ENV CLANG11PATH=/usr/local/clang11
 LABEL description="Build a LLVM/Clang 11 toolchain for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com"
