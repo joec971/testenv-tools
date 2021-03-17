@@ -15,18 +15,21 @@ ENV BU2PATH=/usr/local/riscv-elf-binutils
 ENV PATH=${BU2PATH}/bin:${GCC10PATH}/bin:$PATH
 ENV MCMODEL="medany"
 
-WORKDIR /toolchain/gcc-10.2.0/build-stage1
-
-# stage1
 # GCC makes the assumption the Python3 executable is called 'python'
 RUN ln -s /usr/bin/python3 /usr/bin/python
+
+# GCC makes the assumption the binutils are installed within its own install dir
+RUN mkdir ${GCC10PATH}
+RUN tar cf - -C ${BU2PATH} riscv64-unknown-elf | tar xf - -C ${GCC10PATH}
+
+WORKDIR /toolchain/gcc-10.2.0/build-gcc1
 RUN ../configure \
     --target=riscv64-unknown-elf \
     --prefix=${GCC10PATH} \
     --disable-shared \
     --disable-threads \
     --disable-tls \
-    --enable-languages=c,c++ \
+    --enable-languages=c \
     --with-system-zlib \
     --with-newlib \
     --with-sysroot=${GCC10PATH}/riscv64-unknown-elf \
@@ -36,56 +39,30 @@ RUN ../configure \
     --disable-libgomp \
     --disable-nls \
     --disable-tm-clone-registry \
-    --enable-multilib \
+    --disable-multilib \
     --src=.. \
     --with-python=/usr/bin/python3 \
     --with-abi=lp64d \
     --with-arch=rv64imafdc \
-    --with-tune=rocket \
     CFLAGS_FOR_TARGET="-Os -mcmodel=${MCMODEL}" \
     CXXFLAGS_FOR_TARGET="-Os -mcmodel=${MCMODEL}"
 RUN make -j$(nproc) all-gcc >/dev/null
 RUN make install-gcc
 
-# GCC makes the assumption the binutils are installed within its own install dir...
-# RUN ln -s ${BU2PATH}/riscv64-unknown-elf ${GCC10PATH}/riscv64-unknown-elf
-RUN tar cf - -C ${BU2PATH} riscv64-unknown-elf | tar xf - -C ${GCC10PATH}
-
-# WORKDIR /toolchain/newlib/build-newlib
-# RUN ../configure \
-#     --target=riscv64-unknown-elf \
-#     --prefix=${GCC10PATH} \
-#     --enable-newlib-io-long-double \
-#     --enable-newlib-io-long-long \
-#     --enable-newlib-io-c99-formats \
-#     --enable-newlib-register-fini \
-#     CFLAGS_FOR_TARGET="-O2 -D_POSIX_MODE -mcmodel=${MCMODEL}" \
-#     CXXFLAGS_FOR_TARGET="-O2 -D_POSIX_MODE -mcmodel=${MCMODEL}"
-# RUN make -j$(nproc) >/dev/null
-# RUN make install
-
-# NANO version
-WORKDIR /toolchain/newlib/build-newlib
+WORKDIR /toolchain/newlib/build-newlib1
 RUN ../configure \
     --target=riscv64-unknown-elf \
-    --prefix=${GCC10PATH}  \
-    --enable-newlib-reent-small \
-    --disable-newlib-fvwrite-in-streamio \
-    --disable-newlib-fseek-optimization \
-    --disable-newlib-wide-orient \
-    --enable-newlib-nano-malloc \
-    --disable-newlib-unbuf-stream-opt \
-    --enable-lite-exit \
-    --enable-newlib-global-atexit \
-    --enable-newlib-nano-formatted-io \
-    --disable-newlib-supplied-syscalls \
-    --disable-nls \
-    CFLAGS_FOR_TARGET="-Os -ffunction-sections -fdata-sections -Os -mcmodel=${MCMODEL}" \
-    CXXFLAGS_FOR_TARGET="-Os -ffunction-sections -fdata-sections -Os -mcmodel=${MCMODEL}"
+    --prefix=${GCC10PATH} \
+    --enable-newlib-io-long-double \
+    --enable-newlib-io-long-long \
+    --enable-newlib-io-c99-formats \
+    --enable-newlib-register-fini \
+    CFLAGS_FOR_TARGET="-O2 -D_POSIX_MODE -mcmodel=${MCMODEL}" \
+    CXXFLAGS_FOR_TARGET="-O2 -D_POSIX_MODE -mcmodel=${MCMODEL}"
 RUN make -j$(nproc) >/dev/null
 RUN make install
 
-WORKDIR /toolchain/gcc-10.2.0/build-gcc-stage2
+WORKDIR /toolchain/gcc-10.2.0/build-gcc2
 RUN ../configure \
     --target=riscv64-unknown-elf \
     --prefix=${GCC10PATH} \
@@ -110,7 +87,31 @@ RUN ../configure \
     --with-tune=rocket \
     CFLAGS_FOR_TARGET="-Os -mcmodel=${MCMODEL}" \
     CXXFLAGS_FOR_TARGET="-Os -mcmodel=${MCMODEL}"
-RUN make -j$(nproc)
+RUN make -j$(nproc) >/dev/null
+RUN rm -rf ${GCC10PATH}
+RUN mkdir ${GCC10PATH}
+RUN tar cf - -C ${BU2PATH} riscv64-unknown-elf | tar xf - -C ${GCC10PATH}
+RUN make install
+
+# NANO newlib version
+WORKDIR /toolchain/newlib/build-newlib2
+RUN ../configure \
+    --target=riscv64-unknown-elf \
+    --prefix=${GCC10PATH}  \
+    --enable-newlib-reent-small \
+    --disable-newlib-fvwrite-in-streamio \
+    --disable-newlib-fseek-optimization \
+    --disable-newlib-wide-orient \
+    --enable-newlib-nano-malloc \
+    --disable-newlib-unbuf-stream-opt \
+    --enable-lite-exit \
+    --enable-newlib-global-atexit \
+    --enable-newlib-nano-formatted-io \
+    --disable-newlib-supplied-syscalls \
+    --disable-nls \
+    CFLAGS_FOR_TARGET="-Os -ffunction-sections -fdata-sections -Os -mcmodel=${MCMODEL}" \
+    CXXFLAGS_FOR_TARGET="-Os -ffunction-sections -fdata-sections -Os -mcmodel=${MCMODEL}"
+RUN make -j$(nproc) >/dev/null
 RUN make install
 
 RUN strip ${GCC10PATH}/bin/*
