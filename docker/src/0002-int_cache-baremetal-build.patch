@@ -1,0 +1,13 @@
+diff --git a/compiler-rt/lib/builtins/int_util.c b/compiler-rt/lib/builtins/int_util.c
+index 226a6e93440d..c9ae2a31cad6 100644
+--- a/compiler-rt/lib/builtins/int_util.c
++++ b/compiler-rt/lib/builtins/int_util.c
+@@ -41,7 +41,7 @@ void __compilerrt_abort_impl(const char *file, int line, const char *function) {
+   __assert_rtn(function, file, line, "libcompiler_rt abort");
+ }
+ 
+-#elif __Fuchsia__
++#elif __Fuchsia__ || 1
+ 
+ #ifndef _WIN32
+ __attribute__((weak))

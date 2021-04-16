@@ -19,6 +19,11 @@ ENV prefix=${CLANGPATH}
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 ADD clang-riscv-v12.sh /
+ADD 0001-clearcache-baremetal-build.patch /
+ADD 0002-int_cache-baremetal-build.patch /
+RUN (cd /toolchain/llvm && \
+     cat /0001-clearcache-baremetal-build.patch \
+         /0002-int_cache-baremetal-build.patch | patch -p1)
 RUN sh /clang-riscv-v12.sh
 
 WORKDIR /

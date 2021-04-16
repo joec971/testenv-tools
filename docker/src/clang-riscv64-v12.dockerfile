@@ -1,5 +1,5 @@
-FROM clang:v12.0.0 as clang
-FROM newlib:v4.1.0 as newlib
+FROM llvm-src:v12.0.0 as clang
+FROM newlib-src:v4.1.0 as newlib
 
 FROM llvm-riscv:a3.13-v12.0.0 as builder
 RUN apk update
@@ -13,12 +13,17 @@ ENV CLANGPATH=/usr/local/clang12
 ENV xlen=64
 ENV xtarget="riscv${xlen}-unknown-elf"
 # if build=DEBUG, generated library are built with -g -Og, otherwise -Os
-# ENV build=DEBUG
+ENV build=DEBUG
 ENV prefix=${CLANGPATH}
 
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 ADD clang-riscv-v12.sh /
+ADD 0001-clearcache-baremetal-build.patch /
+ADD 0002-int_cache-baremetal-build.patch /
+RUN (cd /toolchain/llvm && \
+    cat /0001-clearcache-baremetal-build.patch \
+    /0002-int_cache-baremetal-build.patch | patch -p1)
 RUN sh /clang-riscv-v12.sh
 
 WORKDIR /

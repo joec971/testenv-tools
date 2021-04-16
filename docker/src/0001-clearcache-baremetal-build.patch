@@ -1,0 +1,13 @@
+diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
+index 73b6bead8424..b46a3bfa4af2 100644
+--- a/compiler-rt/lib/builtins/CMakeLists.txt
++++ b/compiler-rt/lib/builtins/CMakeLists.txt
+@@ -244,7 +244,7 @@ if (HAVE_UNWIND_H)
+   )
+ endif ()
+ 
+-if (NOT FUCHSIA)
++if (NOT FUCHSIA AND NOT COMPILER_RT_BAREMETAL_BUILD)
+   set(GENERIC_SOURCES
+     ${GENERIC_SOURCES}
+     clear_cache.c
