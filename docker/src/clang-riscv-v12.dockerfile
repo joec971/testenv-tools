@@ -1,18 +1,18 @@
-FROM llvm-riscv:a3.13-v11.0.1 as source
+FROM llvm-riscv:a3.13-v12.0.0 as source
 
 FROM alpine:3.13
 LABEL description="RISC-V toolchain"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
-ENV CLANG11PATH=/usr/local/clang11
-WORKDIR ${CLANG11PATH}
+ENV CLANGPATH=/usr/local/clang12
+WORKDIR ${CLANGPATH}
 
-COPY --from=source ${CLANG11PATH}/bin ${CLANG11PATH}/bin
-COPY --from=source ${CLANG11PATH}/lib/*.so ${CLANG11PATH}/lib/
-COPY --from=source ${CLANG11PATH}/lib/clang ${CLANG11PATH}/lib/clang
-COPY --from=source ${CLANG11PATH}/lib/cmake ${CLANG11PATH}/lib/cmake
-COPY --from=source ${CLANG11PATH}/libexec ${CLANG11PATH}/libexec
-COPY --from=source ${CLANG11PATH}/share ${CLANG11PATH}/share
-COPY --from=source ${CLANG11PATH}/include ${CLANG11PATH}/include
+COPY --from=source ${CLANGPATH}/bin ${CLANGPATH}/bin
+COPY --from=source ${CLANGPATH}/lib/*.so ${CLANGPATH}/lib/
+COPY --from=source ${CLANGPATH}/lib/clang ${CLANGPATH}/lib/clang
+COPY --from=source ${CLANGPATH}/lib/cmake ${CLANGPATH}/lib/cmake
+COPY --from=source ${CLANGPATH}/libexec ${CLANGPATH}/libexec
+COPY --from=source ${CLANGPATH}/share ${CLANGPATH}/share
+COPY --from=source ${CLANGPATH}/include ${CLANGPATH}/include
 WORKDIR /
 
 # because LLVM C++ library build process needs the LLVM native .a libraries,
@@ -22,4 +22,4 @@ WORKDIR /
 #   target application, saving image storage footprint
 # This dockerfile is dedicated to build the second, enlightened one.
 
-# docker build -f clang-riscv-v11.dockerfile -t sifive/clang-riscv:a3.13-v11.0.1 .
+# docker build -f clang-riscv-v12.dockerfile -t sifive/clang-riscv:a3.13-v12.0.0 .

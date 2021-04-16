@@ -41,12 +41,12 @@ xcxxdefs="-D_LIBUNWIND_IS_BAREMETAL=1 -D_GNU_SOURCE=1 -D_POSIX_TIMERS=1"
 xcxxdefs="${xcxxdefs} -D_LIBCPP_HAS_NO_LIBRARY_ALIGNED_ALLOCATION"
 xcxxnothread="-D_LIBCPP_HAS_NO_THREADS=1"
 
-export CC_FOR_TARGET="${CLANG11PATH}/bin/clang"
-export AR_FOR_TARGET="${CLANG11PATH}/bin/llvm-ar"
-export NM_FOR_TARGET="${CLANG11PATH}/bin/llvm-nm"
-export RANLIB_FOR_TARGET="${CLANG11PATH}/bin/llvm-ranlib"
-export READELF_FOR_TARGET="${CLANG11PATH}/bin/llvm-readelf"
-export AS_FOR_TARGET="${CLANG11PATH}/bin/clang"
+export CC_FOR_TARGET="${CLANGPATH}/bin/clang"
+export AR_FOR_TARGET="${CLANGPATH}/bin/llvm-ar"
+export NM_FOR_TARGET="${CLANGPATH}/bin/llvm-nm"
+export RANLIB_FOR_TARGET="${CLANGPATH}/bin/llvm-ranlib"
+export READELF_FOR_TARGET="${CLANGPATH}/bin/llvm-readelf"
+export AS_FOR_TARGET="${CLANGPATH}/bin/clang"
 
 newlib_default="\
     --disable-malloc-debugging              \
@@ -133,11 +133,11 @@ for abi in i ia iac im imac iaf iafd imf imfd imafc imafdc; do
       -DCMAKE_CROSSCOMPILING=ON                         \
       -DCMAKE_CXX_COMPILER_FORCED=TRUE                  \
       -DCMAKE_BUILD_TYPE=Release                        \
-      -DCMAKE_C_COMPILER=${CLANG11PATH}/bin/clang       \
-      -DCMAKE_CXX_COMPILER=${CLANG11PATH}/bin/clang++   \
-      -DCMAKE_LINKER=${CLANG11PATH}/bin/clang           \
-      -DCMAKE_AR=${CLANG11PATH}/bin/llvm-ar             \
-      -DCMAKE_RANLIB=${CLANG11PATH}/bin/llvm-ranlib     \
+      -DCMAKE_C_COMPILER=${CLANGPATH}/bin/clang       \
+      -DCMAKE_CXX_COMPILER=${CLANGPATH}/bin/clang++   \
+      -DCMAKE_LINKER=${CLANGPATH}/bin/clang           \
+      -DCMAKE_AR=${CLANGPATH}/bin/llvm-ar             \
+      -DCMAKE_RANLIB=${CLANGPATH}/bin/llvm-ranlib     \
       -DCMAKE_C_COMPILER_TARGET=${xtarget}              \
       -DCMAKE_ASM_COMPILER_TARGET=${xtarget}            \
       -DCMAKE_SYSROOT=${xsysroot}                       \
@@ -146,7 +146,7 @@ for abi in i ia iac im imac iaf iafd imf imfd imafc imafdc; do
       -DCMAKE_ASM_FLAGS="${xcrtflags}"                  \
       -DCMAKE_CXX_FLAGS="${xcrtflags}"                  \
       -DCMAKE_EXE_LINKER_FLAGS="-L${xsysroot}/lib"      \
-      -DLLVM_CONFIG_PATH=${CLANG11PATH}/bin/llvm-config \
+      -DLLVM_CONFIG_PATH=${CLANGPATH}/bin/llvm-config \
       -DLLVM_DEFAULT_TARGET_TRIPLE=${xtarget}           \
       -DLLVM_TARGETS_TO_BUILD=RISCV                     \
       -DLLVM_ENABLE_PIC=OFF                             \

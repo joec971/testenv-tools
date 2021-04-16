@@ -10,10 +10,10 @@ PAT="${HOME}/.gha-self-runner.pat"
 # do not let this container w/o supervision (no detach or other background
 # run).
 docker run \
-	--env ORGANIZATION=sifive \
-	--env ACCESS_TOKEN="$(cat ${PAT})" \
-	--name gha-runner \
+    --env ORGANIZATION=sifive \
+    --env ACCESS_TOKEN="$(cat ${PAT})" \
+    --name gha-runner \
         -u docker:$(grep docker /etc/group | cut -d: -f3) \
-	-v /var/run/docker.sock:/var/run/docker.sock \
-	gha-runner:2.273.5
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    gha-runner:2.273.5
 

@@ -109,7 +109,7 @@ RUN make -j$(nproc)
 RUN make install
 
 RUN strip /usr/local/riscv-elf-gcc/bin/*
-RUN strip /usr/local/riscv-elf-gcc/libexec/gcc/riscv64-unknown-elf/10.2.0/c* 
-RUN strip /usr/local/riscv-elf-gcc/libexec/gcc/riscv64-unknown-elf/10.2.0/lto* 
-RUN strip /usr/local/riscv-elf-gcc/libexec/gcc/riscv64-unknown-elf/10.2.0/plugin/* 
+RUN strip /usr/local/riscv-elf-gcc/libexec/gcc/riscv64-unknown-elf/10.2.0/c*
+RUN strip /usr/local/riscv-elf-gcc/libexec/gcc/riscv64-unknown-elf/10.2.0/lto*
+RUN strip /usr/local/riscv-elf-gcc/libexec/gcc/riscv64-unknown-elf/10.2.0/plugin/*
 RUN strip /usr/local/riscv-elf-gcc/libexec/gcc/riscv64-unknown-elf/10.2.0/install-tools/fixincl
