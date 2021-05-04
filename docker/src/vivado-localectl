@@ -1,0 +1,10 @@
+#!/bin/sh
+# Avoid installing the whole systemd for the sake of retrieving a locale.
+
+cat <<EOT
+   System Locale: LANG=C.UTF-8
+                  LANGUAGE=C.UTF-8
+       VC Keymap: n/a
+      X11 Layout: us
+       X11 Model: pc105
+EOT
