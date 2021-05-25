@@ -13,7 +13,7 @@ ENV CLANGPATH=/usr/local/clang12
 ENV xlen=64
 ENV xtarget="riscv${xlen}-unknown-elf"
 # if build=DEBUG, generated library are built with -g -Og, otherwise -Os
-ENV build=DEBUG
+# ENV build=DEBUG
 ENV prefix=${CLANGPATH}
 
 RUN ln -s /usr/bin/python3 /usr/bin/python
@@ -38,6 +38,6 @@ COPY --from=builder ${CLANGPATH}/${xtarget} \
      ${CLANGPATH}/${xtarget}
 WORKDIR /
 
-# docker build -f clang-riscv64-v12.dockerfile -t sifive/clang-riscv64:a3.13-v12.0.0-n4.1 .
+# docker build -f clang-riscv64-v12.dockerfile -t sifive/clang-riscv64:a3.13-v12.0.0-n4.1a .
 # if debug:
-#  docker build -f clang-riscv64-v12.dockerfile -t sifive/clang-riscv64_dbg:a3.13-v12.0.0-n4.1 .
+#  docker build -f clang-riscv64-v12.dockerfile -t sifive/clang-riscv64_dbg:a3.13-v12.0.0-n4.1a .

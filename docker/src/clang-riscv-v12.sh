@@ -78,7 +78,7 @@ fi
 
 jobs=$(nproc)
 
-for abi in i ia iac im imac iaf iafd imf imfd imafc imafdc; do
+for abi in i ia iac im imc imac iaf iafd imf imfc imfd imafc imafdc; do
     if echo "${abi}" | grep -q "d"; then
         fp="d"
         newlib_float=""

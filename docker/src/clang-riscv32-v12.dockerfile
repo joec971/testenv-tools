@@ -38,7 +38,7 @@ COPY --from=builder ${CLANGPATH}/${xtarget} \
      ${CLANGPATH}/${xtarget}
 WORKDIR /
 
-# docker build -f clang-riscv32-v12.dockerfile -t sifive/clang-riscv32:a3.13-v12.0.0-n4.1 .
+# docker build -f clang-riscv32-v12.dockerfile -t sifive/clang-riscv32:a3.13-v12.0.0-n4.1a .
 # if debug:
-#  docker build -f clang-riscv32-v12.dockerfile -t sifive/clang-riscv32_dbg:a3.13-v12.0.0-n4.1 .
+#  docker build -f clang-riscv32-v12.dockerfile -t sifive/clang-riscv32_dbg:a3.13-v12.0.0-n4.1a .
 
