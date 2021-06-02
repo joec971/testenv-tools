@@ -16,5 +16,5 @@ WORKDIR /
 # export DOCKER_BUILDKIT=1
 # eval `ssh-agent -s`
 # ssh-agent ~/.ssh/id_...
-# docker build --ssh default -f llvm-src-riscv-sifive.dockerfile -t llvm-src:r202104 .
+# docker build --ssh default -f llvm-src-riscv-sifive.dockerfile -t sifive/llvm-src:r202104 .
 # unset DOCKER_BUILDKIT

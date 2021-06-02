@@ -1,4 +1,4 @@
-FROM llvm-src:r202104
+FROM sifive/llvm-src:r202104
 ENV CLANGPATH=/usr/local/clang
 LABEL description="Build a SiFive LLVM/Clang 12 toolchain for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com"
@@ -38,4 +38,4 @@ WORKDIR /
 # on is therefore never pushed to the docker hub, as it only lasts for the
 # time required to build the toolchain itself
 
-# docker build -f llvm-riscv-sifive.dockerfile -t llvm-riscv-sifive:a3.13-r202104 .
+# docker build -f llvm-riscv-sifive.dockerfile -t sifive/llvm-riscv-sifive:a3.13-r202104 .

@@ -1,10 +1,9 @@
-FROM llvm-riscv:a3.13-v12.0.0 as source
-# FROM sifive/clang-riscv:a3.13-v12.0.0 as source
+FROM sifive/llvm-riscv-sifive:a3.13-r202104 as source
 
-FROM alpine:3.13
+FROM alpine:3.13.5
 LABEL description="RISC-V selected binary tools"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
-ENV CLANGPATH=/usr/local/clang12
+ENV CLANGPATH=/usr/local/clang
 WORKDIR ${CLANGPATH}
 
 COPY --from=source ${CLANGPATH}/bin/llvm-addr2line \
@@ -17,4 +16,4 @@ WORKDIR /
 # Selected tools that are useful to run and validate unit tests.
 # This is not the full toolchain.
 
-# docker build -f llvm-riscv-v12-nano.dockerfile -t sifive/llvm-riscv-nano:a3.13-v12.0.0 .
+# docker build -f llvm-riscv-sifive-nano.dockerfile -t sifive/llvm-riscv-nano:a3.13-r202104 .
