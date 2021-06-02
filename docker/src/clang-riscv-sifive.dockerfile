@@ -1,4 +1,4 @@
-FROM sifive/llvm-riscv-sifive:a3.13-r202104 as source
+FROM sifive/llvm-riscv:a3.13-r202104 as source
 
 FROM alpine:3.13.5
 LABEL description="RISC-V toolchain"

@@ -1,7 +1,7 @@
 FROM sifive/llvm-src:r202104 as clang
 FROM newlib-src:v4.1.0 as newlib
 
-FROM sifive/llvm-riscv-sifive:a3.13-r202104 as builder
+FROM sifive/llvm-riscv:a3.13-r202104 as builder
 RUN apk update
 RUN apk upgrade
 RUN apk add build-base samurai cmake git patch vim python3 curl coreutils texinfo
