@@ -1,4 +1,4 @@
-FROM alpine:3.13 as builder
+FROM alpine:3.13.5 as builder
 LABEL description="Build XC3SPROG"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
@@ -17,7 +17,7 @@ RUN ninja install
 RUN strip /usr/local/xc3sprog/bin/*
 WORKDIR /
 
-FROM alpine:3.13
+FROM alpine:3.13.5
 LABEL description="Tool suite to program Xilinx FPGAs, CPLDs, and EEPROM"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 COPY --from=builder /usr/local/xc3sprog /usr/local/xc3sprog

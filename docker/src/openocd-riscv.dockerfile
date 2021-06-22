@@ -1,4 +1,4 @@
-FROM alpine:3.13 as builder
+FROM alpine:3.13.5 as builder
 LABEL description="Build OpenOCD for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
@@ -60,7 +60,7 @@ WORKDIR /riscv-openocd
 RUN echo -e "\nGit info" $(git describe) "\n"
 WORKDIR /
 
-FROM alpine:3.13
+FROM alpine:3.13.5
 LABEL description="RISC-V OpenOCD"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 COPY --from=builder /usr/local/riscv-openocd /usr/local/riscv-openocd

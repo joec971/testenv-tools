@@ -7,7 +7,7 @@ RUN apk update
 RUN apk add build-base git python3-dev gawk pkgconfig texinfo patchutils curl \
     bc make autoconf automake bison flex libtool m4 \
     gmp-dev isl-dev mpfr-dev mpc1-dev expat-dev zlib-dev
-COPY --from=gcc /toolchain/gcc-10.2.0 /toolchain/gcc-10.2.0
+COPY --from=gcc /toolchain/gcc /toolchain/gcc
 COPY --from=newlib /toolchain/newlib /toolchain/newlib
 
 ENV GCC10PATH=/usr/local/riscv-elf-gcc
@@ -22,7 +22,7 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN mkdir ${GCC10PATH}
 RUN tar cf - -C ${BU2PATH} riscv64-unknown-elf | tar xf - -C ${GCC10PATH}
 
-WORKDIR /toolchain/gcc-10.2.0/build-gcc1
+WORKDIR /toolchain/gcc/build-gcc1
 RUN ../configure \
     --target=riscv64-unknown-elf \
     --prefix=${GCC10PATH} \
@@ -63,7 +63,7 @@ RUN ../configure \
 RUN make -j$(nproc) >/dev/null
 RUN make install
 
-WORKDIR /toolchain/gcc-10.2.0/build-gcc2
+WORKDIR /toolchain/gcc/build-gcc2
 RUN ../configure \
     --target=riscv64-unknown-elf \
     --prefix=${GCC10PATH} \

@@ -1,4 +1,4 @@
-FROM alpine:3.13 as builder
+FROM alpine:3.13.5 as builder
 LABEL description="Build openFPGALoader"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
@@ -15,7 +15,7 @@ RUN strip /usr/local/openfpgaloader/bin/*
 RUN git rev-parse --short HEAD
 WORKDIR /
 
-FROM alpine:3.13
+FROM alpine:3.13.5
 LABEL description="Universal utility for programming FPGA"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 COPY --from=builder /usr/local/openfpgaloader /usr/local/openfpgaloader
