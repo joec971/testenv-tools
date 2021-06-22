@@ -1,6 +1,6 @@
-FROM gcc-src:v10.2.0 as gcc
+FROM sifive/gcc-src:r2021.06.1 as gcc
 FROM newlib-src:v4.1.0 as newlib
-FROM sifive/binutils-riscv:a3.13-v2.36.1 as builder
+FROM sifive/binutils-riscv:a3.13-r2021.06.1 as builder
 LABEL description="Build a GCC 10 toolchain for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com"
 RUN apk update
@@ -42,6 +42,7 @@ RUN ../configure \
     --disable-multilib \
     --src=.. \
     --with-python=/usr/bin/python3 \
+    --with-pkgversion="SiFive r2021.06.1" \
     --with-abi=lp64d \
     --with-arch=rv64imafdc \
     CFLAGS_FOR_TARGET="-Os -mcmodel=${MCMODEL}" \
@@ -82,9 +83,9 @@ RUN ../configure \
     --disable-tm-clone-registry \
     --src=.. \
     --enable-multilib \
+    --with-pkgversion="SiFive r2021.06.1" \
     --with-abi=lp64d \
     --with-arch=rv64imafdc \
-    --with-tune=rocket \
     CFLAGS_FOR_TARGET="-Os -mcmodel=${MCMODEL}" \
     CXXFLAGS_FOR_TARGET="-Os -mcmodel=${MCMODEL}"
 RUN make -j$(nproc) >/dev/null
@@ -120,7 +121,7 @@ RUN strip ${GCC10PATH}/libexec/gcc/riscv64-unknown-elf/10.2.0/lto*
 RUN strip ${GCC10PATH}/libexec/gcc/riscv64-unknown-elf/10.2.0/plugin/* 
 RUN strip ${GCC10PATH}/libexec/gcc/riscv64-unknown-elf/10.2.0/install-tools/fixincl
 
-FROM alpine:3.13.2
+FROM alpine:3.13.5
 LABEL description="RISC-V GNU toolchain"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 ENV GCC10PATH=/usr/local/riscv-elf-gcc
@@ -129,4 +130,4 @@ WORKDIR ${GCC10PATH}
 COPY --from=builder ${GCC10PATH} ${GCC10PATH}
 WORKDIR /
 
-# docker build -f gcc-riscv-v10.dockerfile -t sifive/gcc-riscv:a3.13-v10.2.0 .
+# docker build -f gcc-riscv-sifive.dockerfile -t sifive/gcc-riscv:a3.13-r2021.06.1 .

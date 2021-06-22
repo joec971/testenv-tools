@@ -2,7 +2,7 @@
 # Build an small image base for compiling/building bare metal target software
 # Note that toolchain is not contained in this image
 #-------------------------------------------------------------------------------
-FROM alpine:3.13.2
+FROM alpine:3.13.5
 
 WORKDIR /
 

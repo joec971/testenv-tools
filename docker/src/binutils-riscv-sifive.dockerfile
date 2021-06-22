@@ -1,10 +1,15 @@
-FROM alpine:3.13.2 as builder
+# syntax=docker/dockerfile:1.0.0-experimental
+
+FROM alpine:3.13.5 as builder
 LABEL description="Build binutils for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
-RUN apk add build-base gmp-dev mpfr-dev file git texinfo flex bison
+RUN apk add build-base gmp-dev mpfr-dev file git texinfo flex bison openssh-client git
+RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 WORKDIR /toolchain
-RUN git clone --depth 1 https://github.com/sifive/riscv-binutils-gdb.git -b sifive-rvv-1.0.x-zfh-rvb
+RUN --mount=type=ssh git clone --depth 1 --branch sifive-binutils-2021.06.1 \
+    git@github.com:sifive/riscv-binutils-gdb-internal.git riscv-binutils-gdb
+RUN ls -l
 RUN mkdir /toolchain/build
 WORKDIR /toolchain/build
 ENV BU2PATH=/usr/local/riscv-elf-binutils
@@ -22,7 +27,8 @@ RUN ../riscv-binutils-gdb/configure \
     --disable-werror \
     --disable-debug \
     --disable-gdb \
-    --disable-gold
+    --disable-gold \
+    --with-pkgversion="SiFive r2021.06.1"
 RUN make -j$(nproc)
 RUN make install
 RUN strip ${BU2PATH}/bin/*
@@ -33,7 +39,7 @@ RUN (cd ${BU2PATH}/riscv64-unknown-elf/bin; \
      done)
 WORKDIR /
 
-FROM alpine:3.13.2
+FROM alpine:3.13.5
 LABEL description="RISC-V binutils"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 ENV BU2PATH=/usr/local/riscv-elf-binutils
@@ -41,5 +47,9 @@ ENV PATH=$PATH:${BU2PATH}/bin
 COPY --from=builder ${BU2PATH} ${BU2PATH}
 WORKDIR /
 
-##docker build -f binutils-riscv-v2.dockerfile -t sifive/binutils-riscv:a3.13-v2.36.1 .
-# docker build -f binutils-riscv-v2.dockerfile -t sifive/binutils-riscv:a3.13-sifive .
+# Docker 18.09+ is required
+# export DOCKER_BUILDKIT=1
+# eval `ssh-agent -s`
+# ssh-add ~/.ssh/id_...
+# docker build  --ssh default -f binutils-riscv-sifive.dockerfile -t sifive/binutils-riscv:a3.13-r2021.06.1 .
+# unset DOCKER_BUILDKIT

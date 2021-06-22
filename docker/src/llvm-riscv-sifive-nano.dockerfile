@@ -1,4 +1,4 @@
-FROM sifive/llvm-riscv:a3.13-r202104 as source
+FROM sifive/llvm-riscv:a3.13-r2021.06.1 as source
 
 FROM alpine:3.13.5
 LABEL description="RISC-V selected binary tools"
@@ -16,4 +16,4 @@ WORKDIR /
 # Selected tools that are useful to run and validate unit tests.
 # This is not the full toolchain.
 
-# docker build -f llvm-riscv-sifive-nano.dockerfile -t sifive/llvm-riscv-nano:a3.13-r202104 .
+# docker build -f llvm-riscv-sifive-nano.dockerfile -t sifive/llvm-riscv-nano:a3.13-r2021.06.1 .

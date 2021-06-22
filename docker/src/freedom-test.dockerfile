@@ -2,7 +2,7 @@
 # Build an small image base to perform unit test with a QEMU virtual machine
 # Note that QEMU VM is not contained in this image
 #-------------------------------------------------------------------------------
-FROM alpine:3.13
+FROM alpine:3.13.5
 
 LABEL description="Lightweigth test environment for QEMU & FPGA"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"

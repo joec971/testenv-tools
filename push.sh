@@ -1,11 +1,11 @@
 #!/bin/sh
 docker login
-docker push sifive/clang-riscv64_dbg:a3.13-r202104-n4.1
-docker push sifive/clang-riscv32_dbg:a3.13-r202104-n4.1
-docker push sifive/clang-riscv32:a3.13-r202104-n4.1
-docker push sifive/clang-riscv64:a3.13-r202104-n4.1
-docker push sifive/clang-riscv:a3.13-r202104
-docker push sifive/llvm-riscv-nano:a3.13-r202104
+docker push sifive/clang-riscv64_dbg:a3.13-r2021.06.1-n4.1
+docker push sifive/clang-riscv32_dbg:a3.13-r2021.06.1-n4.1
+docker push sifive/clang-riscv32:a3.13-r2021.06.1-n4.1
+docker push sifive/clang-riscv64:a3.13-r2021.06.1-n4.1
+docker push sifive/clang-riscv:a3.13-r2021.06.1
+docker push sifive/llvm-riscv-nano:a3.13-r2021.06.1
 docker push sifive/qemu-fdt:d1b72f48
 docker push sifive/binutils-riscv:a3.13-v2.35-zb0.93
 docker push sifive/gcc-riscv:a3.13-v10.2.0-si5

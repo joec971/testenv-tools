@@ -2,6 +2,8 @@
 
 set -ex
 
+ABIS="i ia iac im imc imac iaf iafd imf imfc imfd imafc imafdc"
+
 if [ -z "${xlen}" ]; then
     echo "xlen not defined" >&2
     exit 1
@@ -78,7 +80,7 @@ fi
 
 jobs=$(nproc)
 
-for abi in i ia iac im imc imac iaf iafd imf imfc imfd imafc imafdc; do
+for abi in ${ABIS}; do
     if echo "${abi}" | grep -q "d"; then
         fp="d"
         newlib_float=""
