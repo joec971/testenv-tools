@@ -13,4 +13,4 @@ docker push sifive/freedom-dev:a3.13-v1.1
 docker push sifive/freedom-test:a3.13-v1.3
 docker push sifive/openfpgaloader:a3.13-ad21a3b
 docker push sifive/xc3sprog:a3.13-r795
-docker push sifive/openocd-riscv:a3.13-gd52e4668a
+docker push sifive/openocd-riscv:a3.13-v0.11.0a

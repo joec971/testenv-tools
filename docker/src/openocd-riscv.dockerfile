@@ -2,16 +2,19 @@ FROM alpine:3.13.5 as builder
 LABEL description="Build OpenOCD for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
-RUN apk add build-base autoconf automake libtool pkgconfig texinfo coreutils git
+RUN apk add build-base autoconf automake libtool pkgconfig texinfo coreutils git patch curl
 RUN apk add libusb-dev libftdi1-dev
 WORKDIR /
-RUN git clone --single-branch --branch riscv \
-    https://github.com/riscv/riscv-openocd.git
-WORKDIR /riscv-openocd
+RUN git clone --depth 1 --branch v0.11.0 https://git.code.sf.net/p/openocd/code openocd
+RUN curl -LO https://gist.githubusercontent.com/sifive-eblot/a5299eb1f132a00bf45ad97dff4fe78d/raw/ded99a42d5b4f118ec57c7f8c7c4e16bd2b61738/elf64.patch && \
+    [ "d267ba8010e04e88a7e4c0dbd78fdcfa6972387f28045bf986ac53ed17704500" = \
+    "$(sha256sum elf64.patch | cut -d' ' -f1)" ]
+WORKDIR /openocd
+RUN patch -p1 < ../elf64.patch
 RUN mkdir build
 RUN ls -l
 RUN ./bootstrap
-WORKDIR /riscv-openocd/build
+WORKDIR /openocd/build
 RUN ../configure \
     --prefix=/usr/local/riscv-openocd \
     --enable-verbose \
@@ -56,7 +59,7 @@ RUN ../configure \
     --disable-remote-bitbang
 RUN make -j$(nproc)
 RUN make install
-WORKDIR /riscv-openocd
+WORKDIR /openocd
 RUN echo -e "\nGit info" $(git describe) "\n"
 WORKDIR /
 
@@ -70,5 +73,4 @@ COPY --from=builder /usr/local/riscv-openocd /usr/local/riscv-openocd
 RUN chmod +s /usr/local/riscv-openocd/bin/openocd
 WORKDIR /
 
-# docker build -f openocd-riscv.dockerfile -t openocd-riscv:a3.13-tmp .
-# docker tag openocd-riscv:a3.13-tmp sifive/openocd-riscv:a3.13-SHA .
+# docker build -f openocd-riscv.dockerfile -t sifive/openocd-riscv:a3.13-v0.11.0a .
