@@ -4,7 +4,7 @@ FROM newlib-src:v4.1.0 as newlib
 FROM sifive/llvm-riscv:a3.13-r2021.06.1 as builder
 RUN apk update
 RUN apk upgrade
-RUN apk add build-base samurai cmake git patch vim python3 curl coreutils texinfo
+RUN apk add build-base samurai cmake git patch vim python3 coreutils texinfo
 COPY --from=clang /toolchain/llvm /toolchain/llvm
 COPY --from=newlib /toolchain/newlib /toolchain/newlib
 WORKDIR /toolchain

@@ -4,7 +4,7 @@ FROM sifive/binutils-riscv:a3.13-r2021.06.1 as builder
 LABEL description="Build a GCC 10 toolchain for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com"
 RUN apk update
-RUN apk add build-base git python3-dev gawk pkgconfig texinfo patchutils curl \
+RUN apk add build-base git python3-dev gawk pkgconfig texinfo patchutils \
     bc make autoconf automake bison flex libtool m4 \
     gmp-dev isl-dev mpfr-dev mpc1-dev expat-dev zlib-dev
 COPY --from=gcc /toolchain/gcc /toolchain/gcc
