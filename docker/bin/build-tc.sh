@@ -118,7 +118,7 @@ docker build --ssh default -f gcc-src-sifive.dockerfile -t sifive/gcc-src:r${SI5
     || die "Failed to download GCC toolchain"
 info "Download newlib"
 cd ${DOCKER_TMPDIR} && \
-docker build -f newlib-v4.dockerfile -t newlib-src:v${NEWLIB_VER}.0 . \
+docker build -f newlib.dockerfile -t newlib-src:v${NEWLIB_VER}.0 . \
     || die "Failed to download newlib"
 unset DOCKER_BUILDKIT
 
