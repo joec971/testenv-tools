@@ -1,0 +1,5 @@
+# Version definitions
+
+SI5_VER="2021.06.3"
+ALPINE_VERSION="3.13.5"
+NEWLIB_VERSION="4.1.0"
