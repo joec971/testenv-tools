@@ -4,9 +4,8 @@
 
 SSH_ID="${GITHUB_SSH_ID:=${HOME}/.ssh/id_si5_ed25519}"
 SI5_VER="2021.06.3"
-ALPINE_VER="3.13"
 ALPINE_VERSION="3.13.5"
-NEWLIB_VER="${NEWLIB_VER}"
+NEWLIB_VERSION="4.1.0"
 
 _xecho () {
     if [ "$1" = "-n" -o  "$1" = "-ne" ]; then
@@ -60,6 +59,9 @@ die() {
 DOCKER_TMPDIR=""
 SSH_AGENT_PID=0
 
+ALPINE_VER="$(echo ${ALPINE_VERSION} | cut -d. -f1-2)"
+NEWLIB_VER="$(echo ${NEWLIB_VERSION} | cut -d. -f1-2)"
+
 cleanup() {
     if [ -n "${DOCKER_TMPDIR}" ]; then
         if [ -d "${DOCKER_TMPDIR}" ]; then
@@ -86,6 +88,8 @@ for df in ${dockfiles}; do
             -e "s/@SI5_BRANCH@/$SI5_VER/g" \
             -e "s/@ALPINE_VER@/a$ALPINE_VER/g" \
             -e "s/@ALPINE_VERSION@/$ALPINE_VERSION/g" \
+            -e "s/@NEWLIB_VER@/n$NEWLIB_VER/g" \
+            -e "s/@NEWLIB_VERSION@/$NEWLIB_VERSION/g" \
             -e "s/@BUILD@/RELEASE/g" \
     > ${DOCKER_TMPDIR}/$df || die "Cannot generate $df"
     echo "$df" | grep -Eq "clang-riscv[0-9][0-9]-sifive.dockerfile"
@@ -97,6 +101,8 @@ for df in ${dockfiles}; do
                 -e "s/@SI5_BRANCH@/$SI5_VER/g" \
                 -e "s/@ALPINE_VER@/a$ALPINE_VER/g" \
                 -e "s/@ALPINE_VERSION@/$ALPINE_VERSION/g" \
+                -e "s/@NEWLIB_VER@/n$NEWLIB_VER/g" \
+                -e "s/@NEWLIB_VERSION@/$NEWLIB_VERSION/g" \
                 -e "s/@BUILD@/DEBUG/g" \
         > ${DOCKER_TMPDIR}/$ddf || die "Cannot generate $ddf"
     fi
@@ -118,7 +124,7 @@ docker build --ssh default -f gcc-src-sifive.dockerfile -t sifive/gcc-src:r${SI5
     || die "Failed to download GCC toolchain"
 info "Download newlib"
 cd ${DOCKER_TMPDIR} && \
-docker build -f newlib.dockerfile -t newlib-src:v${NEWLIB_VER}.0 . \
+docker build -f newlib.dockerfile -t newlib-src:v${NEWLIB_VERSION} . \
     || die "Failed to download newlib"
 unset DOCKER_BUILDKIT
 

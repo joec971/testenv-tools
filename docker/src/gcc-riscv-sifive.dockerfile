@@ -1,5 +1,5 @@
 FROM sifive/gcc-src:@SI5_VER@ as gcc
-FROM newlib-src:v4.1.0 as newlib
+FROM newlib-src:v@NEWLIB_VERSION@ as newlib
 FROM sifive/binutils-riscv:@ALPINE_VER@-@SI5_VER@ as builder
 LABEL description="Build a GCC 10 toolchain for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com"

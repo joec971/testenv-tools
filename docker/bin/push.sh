@@ -1,9 +1,9 @@
 #!/bin/sh
 docker login
-docker push sifive/clang-riscv64_dbg:@ALPINE_VER@-@SI5_VER@-n4.1
-docker push sifive/clang-riscv32_dbg:@ALPINE_VER@-@SI5_VER@-n4.1
-docker push sifive/clang-riscv32:@ALPINE_VER@-@SI5_VER@-n4.1
-docker push sifive/clang-riscv64:@ALPINE_VER@-@SI5_VER@-n4.1
+docker push sifive/clang-riscv64_dbg:@ALPINE_VER@-@SI5_VER@-n@NEWLIB_VER@
+docker push sifive/clang-riscv32_dbg:@ALPINE_VER@-@SI5_VER@-n@NEWLIB_VER@
+docker push sifive/clang-riscv32:@ALPINE_VER@-@SI5_VER@-n@NEWLIB_VER@
+docker push sifive/clang-riscv64:@ALPINE_VER@-@SI5_VER@-n@NEWLIB_VER@
 docker push sifive/clang-riscv:@ALPINE_VER@-@SI5_VER@
 docker push sifive/llvm-riscv-nano:@ALPINE_VER@-@SI5_VER@
 docker push sifive/qemu-fdt:d1b72f48

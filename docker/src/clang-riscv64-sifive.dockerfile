@@ -1,5 +1,5 @@
 FROM sifive/llvm-src:@SI5_VER@ as clang
-FROM newlib-src:v4.1.0 as newlib
+FROM newlib-src:v@NEWLIB_VERSION@ as newlib
 
 FROM sifive/llvm-riscv:@ALPINE_VER@-@SI5_VER@ as builder
 RUN apk update
@@ -38,6 +38,6 @@ COPY --from=builder ${CLANGPATH}/${xtarget} \
      ${CLANGPATH}/${xtarget}
 WORKDIR /
 
-# docker build -f clang-riscv64-sifive.dockerfile -t sifive/clang-riscv64:@ALPINE_VER@-@SI5_VER@-n4.1 .
+# docker build -f clang-riscv64-sifive.dockerfile -t sifive/clang-riscv64:@ALPINE_VER@-@SI5_VER@-@NEWLIB_VER@ .
 # if debug:
-#  docker build -f clang-riscv64-sifive.dockerfile -t sifive/clang-riscv64_dbg:@ALPINE_VER@-@SI5_VER@-n4.1 .
+#  docker build -f clang-riscv64-sifive.dockerfile -t sifive/clang-riscv64_dbg:@ALPINE_VER@-@SI5_VER@-@NEWLIB_VER@ .
