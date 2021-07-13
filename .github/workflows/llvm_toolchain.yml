@@ -3,7 +3,7 @@ name: LLVM RISC-V toolchain
 on: workflow_dispatch  # manual dispatch only for now
 
 env:
-    ALPINE_VERSION: a3.13
+    ALPINE_VERSION: @ALPINE_VER@
     BINUTILS_MAJVER: v2
     BINUTILS_VERSION: v2.35.1
     LLVM_MAJVER: v12

@@ -1,6 +1,6 @@
-FROM sifive/llvm-src:r2021.06.1
+FROM sifive/llvm-src:@SI5_VER@
 ENV CLANGPATH=/usr/local/clang
-LABEL description="Build a SiFive LLVM/Clang 12 toolchain for RISC-V targets"
+LABEL description="Build a SiFive LLVM/Clang toolchain for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com"
 RUN apk update
 RUN apk add build-base samurai cmake file python3-dev libedit-dev swig git
@@ -38,4 +38,4 @@ WORKDIR /
 # on is therefore never pushed to the docker hub, as it only lasts for the
 # time required to build the toolchain itself
 
-# docker build -f llvm-riscv-sifive.dockerfile -t sifive/llvm-riscv:a3.13-r2021.06.1 .
+# docker build -f llvm-riscv-sifive.dockerfile -t sifive/llvm-riscv:@ALPINE_VER@-@SI5_VER@ .

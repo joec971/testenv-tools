@@ -1,6 +1,6 @@
 FROM gcc-src:v10.2.0 as gcc
 FROM newlib-src:v4.1.0 as newlib
-FROM sifive/binutils-riscv:a3.13-v2.36.1 as builder
+FROM sifive/binutils-riscv:@ALPINE_VER@-v2.36.1 as builder
 LABEL description="Build a GCC 10 toolchain for RISC-V targets"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com"
 RUN apk update

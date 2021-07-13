@@ -1,4 +1,4 @@
-FROM alpine:3.13.5 as builder
+FROM alpine:@ALPINE_VERSION@ as builder
 LABEL description="Build openFPGALoader"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 RUN apk update
@@ -15,7 +15,7 @@ RUN strip /usr/local/openfpgaloader/bin/*
 RUN git rev-parse --short HEAD
 WORKDIR /
 
-FROM alpine:3.13.5
+FROM alpine:@ALPINE_VERSION@
 LABEL description="Universal utility for programming FPGA"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 COPY --from=builder /usr/local/openfpgaloader /usr/local/openfpgaloader
@@ -25,7 +25,7 @@ COPY --from=builder /usr/local/openfpgaloader /usr/local/openfpgaloader
 RUN chmod +s /usr/local/openfpgaloader/bin/*
 WORKDIR /
 
-# docker build -f openfpgaloader.dockerfile -t sifive/openfpgaloader:a3.13-v0.2.1-git .
+# docker build -f openfpgaloader.dockerfile -t sifive/openfpgaloader:@ALPINE_VER@-v0.2.1-git .
 
 
 

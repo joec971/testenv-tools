@@ -3,7 +3,7 @@ name: Freedom runtime envs
 on: workflow_dispatch  # manual dispatch only for now
 
 env:
-    ALPINE_VERSION: a3.13
+    ALPINE_VERSION: @ALPINE_VER@
     DEV_VERSION: v1.0  # to be changed
     TEST_VERSION: v1.0
 

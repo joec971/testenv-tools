@@ -1,6 +1,6 @@
-FROM sifive/llvm-riscv:a3.13-r2021.06.1 as source
+FROM sifive/llvm-riscv:@ALPINE_VER@-@SI5_VER@ as source
 
-FROM alpine:3.13.5
+FROM alpine:@ALPINE_VERSION@
 LABEL description="RISC-V toolchain"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
 ENV CLANGPATH=/usr/local/clang
@@ -22,4 +22,4 @@ WORKDIR /
 #   target application, saving image storage footprint
 # This dockerfile is dedicated to build the second, enlightened one.
 
-# docker build -f clang-riscv-sifive.dockerfile -t sifive/clang-riscv:a3.13-r2021.06.1 .
+# docker build -f clang-riscv-sifive.dockerfile -t sifive/clang-riscv:@ALPINE_VER@-@SI5_VER@ .

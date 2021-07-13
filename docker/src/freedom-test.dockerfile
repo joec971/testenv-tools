@@ -2,7 +2,7 @@
 # Build an small image base to perform unit test with a QEMU virtual machine
 # Note that QEMU VM is not contained in this image
 #-------------------------------------------------------------------------------
-FROM alpine:3.13.5
+FROM alpine:@ALPINE_VERSION@
 
 LABEL description="Lightweigth test environment for QEMU & FPGA"
 LABEL maintainer="Emmanuel Blot <emmanuel.blot@sifive.com>"
@@ -17,6 +17,6 @@ RUN pip3 install pyserial pyftdi junitparser
 
 # docker build -f freedom-test.dockerfile -t freedom-test:tmp .
 # docker run --name freedom-test_tmp -it freedom-test:tmp /bin/sh -c "exit"
-# docker export freedom-test_tmp | docker import - sifive/freedom-test:a3.13-v1.3
+# docker export freedom-test_tmp | docker import - sifive/freedom-test:@ALPINE_VER@-v1.3
 # docker rm freedom-test_tmp
 # docker rmi freedom-test:tmp

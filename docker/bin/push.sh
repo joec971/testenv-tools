@@ -1,17 +1,17 @@
 #!/bin/sh
 docker login
-docker push sifive/clang-riscv64_dbg:a3.13-r2021.06.1-n4.1
-docker push sifive/clang-riscv32_dbg:a3.13-r2021.06.1-n4.1
-docker push sifive/clang-riscv32:a3.13-r2021.06.1-n4.1
-docker push sifive/clang-riscv64:a3.13-r2021.06.1-n4.1
-docker push sifive/clang-riscv:a3.13-r2021.06.1
-docker push sifive/llvm-riscv-nano:a3.13-r2021.06.1
+docker push sifive/clang-riscv64_dbg:@ALPINE_VER@-@SI5_VER@-n4.1
+docker push sifive/clang-riscv32_dbg:@ALPINE_VER@-@SI5_VER@-n4.1
+docker push sifive/clang-riscv32:@ALPINE_VER@-@SI5_VER@-n4.1
+docker push sifive/clang-riscv64:@ALPINE_VER@-@SI5_VER@-n4.1
+docker push sifive/clang-riscv:@ALPINE_VER@-@SI5_VER@
+docker push sifive/llvm-riscv-nano:@ALPINE_VER@-@SI5_VER@
 docker push sifive/qemu-fdt:d1b72f48
-docker push sifive/binutils-riscv:a3.13-r2021.06.1
-docker push sifive/gcc-riscv:a3.13-r2021.06.1
-docker push sifive/gdb-riscv:a3.13-r2021.06.1
-docker push sifive/freedom-dev:a3.13-v1.1
-docker push sifive/freedom-test:a3.13-v1.3
-docker push sifive/openfpgaloader:a3.13-ad21a3b
-docker push sifive/xc3sprog:a3.13-r795
-docker push sifive/openocd-riscv:a3.13-v0.11.0a
+docker push sifive/binutils-riscv:@ALPINE_VER@-@SI5_VER@
+docker push sifive/gcc-riscv:@ALPINE_VER@-@SI5_VER@
+docker push sifive/gdb-riscv:@ALPINE_VER@-@SI5_VER@
+docker push sifive/freedom-dev:@ALPINE_VER@-v1.1
+docker push sifive/freedom-test:@ALPINE_VER@-v1.3
+docker push sifive/openfpgaloader:@ALPINE_VER@-ad21a3b
+docker push sifive/xc3sprog:@ALPINE_VER@-r795
+docker push sifive/openocd-riscv:@ALPINE_VER@-v0.11.0a
