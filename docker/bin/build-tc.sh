@@ -73,7 +73,7 @@ cat $(dirname $0)/push.sh | \
 > ${DOCKER_TMPDIR}/push.sh || die "Cannot generate push.sh"
 
 # copy static files
-cp docker/src/*.sh docker/src/*.patch docker/src/versions.sh ${DOCKER_TMPDIR}/
+cp docker/src/*.sh docker/src/*.patch docker/bin/versions.sh ${DOCKER_TMPDIR}/
 
 info "Use SSH identity ${SSH_ID}"
 eval `ssh-agent -s`
