@@ -14,6 +14,10 @@ ENV GCCPATH=/usr/local/riscv-elf-gcc
 ENV BU2PATH=/usr/local/riscv-elf-binutils
 ENV PATH=${BU2PATH}/bin:${GCCPATH}/bin:$PATH
 ENV MCMODEL="medany"
+ENV MULTILIB_RV32E="rv32eac-ilp32e--;rv32ec-ilp32e--;rv32emac-ilp32e--"
+ENV MULTILIB_RV32="rv32imc-ilp32--;rv32imac-ilp32--;rv32imafc-ilp32f--;rv32imafdc-ilp32d--"
+ENV MULTILIB_RV64="rv64iac-lp64--;rv64ic-lp64--;rv64imc-lp64--;rv64imac-lp64--;rv64imafc-lp64f--;rv64imfc-lp64f--;rv64imafdc-lp64d--"
+ENV MULTILIB_LIST="${MULTILIB_RV32E};${MULTILIB_RV32};${MULTILIB_RV64}"
 
 # GCC makes the assumption the Python3 executable is called 'python'
 RUN ln -s /usr/bin/python3 /usr/bin/python
@@ -83,6 +87,7 @@ RUN ../configure \
     --disable-tm-clone-registry \
     --src=.. \
     --enable-multilib \
+    --with-multilib-generator=${MULTILIB_LIST} \
     --with-pkgversion="SiFive @SI5_VER@" \
     --with-abi=lp64d \
     --with-arch=rv64imafdc \
