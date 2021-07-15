@@ -19,8 +19,8 @@ NEWLIB_VER="$(echo ${NEWLIB_VERSION} | cut -d. -f1-2)"
 cleanup() {
     if [ -n "${DOCKER_TMPDIR}" ]; then
         if [ -d "${DOCKER_TMPDIR}" ]; then
-            info "NOT Cleaning up ${DOCKER_TMPDIR}"
-            # rm -rf "${DOCKER_TMPDIR}"
+            info "Cleaning up ${DOCKER_TMPDIR}"
+            rm -rf "${DOCKER_TMPDIR}"
         fi
     fi
     if [ ${SSH_AGENT_PID} -ne 0 ]; then
