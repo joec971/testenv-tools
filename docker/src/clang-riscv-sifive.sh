@@ -2,20 +2,13 @@
 
 set -ex
 
-ABIS="i ia iac im imc imac iaf iafd imf imfc imfd imafc imafdc"
+# ec eac     emac
+#        imc imac imafc      imafdc
+# ic iac imc imac imafc imfc imafdc
+ISAS="ec eac emac ic iac imc imac imfc imafc imafdc"
 
 if [ -z "${xlen}" ]; then
     echo "xlen not defined" >&2
-    exit 1
-fi
-if [ ${xlen} -eq 64 ]; then
-    xabi="lp"
-    xmodel="-mcmodel=medany"
-elif [ ${xlen} -eq 32 ]; then
-    xabi="ilp"
-    xmodel="-mcmodel=medlow"
-else
-    echo "xlen invalid" >&2
     exit 1
 fi
 if [ -z "${xtarget}" ]; then
@@ -80,21 +73,39 @@ fi
 
 jobs=$(nproc)
 
-for abi in ${ABIS}; do
-    if echo "${abi}" | grep -q "d"; then
-        fp="d"
+for isa in ${ISAS}; do
+    if echo "${isa}" | grep -q "e"; then
+        if [ ${xlen} -eq 64 ]; then
+            # no E extension for RV64
+            continue
+        fi
+        xabix="e"
+        newlib_float="${newlib_nofp}"
+    elif echo "${isa}" | grep -q "d"; then
+        xabix="d"
         newlib_float=""
-    elif echo "${abi}" | grep -q "f"; then
-        fp="f"
+    elif echo "${isa}" | grep -q "f"; then
+        xabix="f"
         newlib_float=""
     else
-        fp=""
+        xabix=""
         # assume no float support, not even soft-float in printf functions. YMMV
         newlib_float="${newlib_nofp}"
     fi
 
-    xarch="rv${xlen}${abi}"
-    xctarget="-march=${xarch} -mabi=${xabi}${xlen}${fp} ${xmodel}"
+    if [ ${xlen} -eq 64 ]; then
+        xabi="lp"
+        xmodel="-mcmodel=medany"
+    elif [ ${xlen} -eq 32 ]; then
+        xabi="ilp"
+        xmodel="-mcmodel=medlow"
+    else
+        echo "xlen invalid" >&2
+        exit 1
+    fi
+
+    xarch="rv${xlen}${isa}"
+    xctarget="-march=${xarch} -mabi=${xabi}${xlen}${xabix} ${xmodel}"
     xarchdir="${xarch}"
     xsysroot="${prefix}/${xtarget}/${xarchdir}"
     xcxx_inc="-I${xsysroot}/include"
@@ -106,7 +117,7 @@ for abi in ${ABIS}; do
     echo "--- cleanup ---"
     rm -rf ${buildpath}
 
-    echo "--- newlib ${xarch}/${xabi}${xlen}${fp} ---"
+    echo "--- newlib ${xarch}/${xabi}${xlen}${xabix} ---"
     mkdir -p ${buildpath}/newlib
     xncflags="${xcflags} -fdebug-prefix-map=/toolchain/newlib=${prefix}/${xtarget}"
     export CFLAGS_FOR_TARGET="-target ${xtarget} ${xncflags} -Wno-unused-command-line-argument"
@@ -122,7 +133,7 @@ for abi in ${ABIS}; do
     mv ${xsysroot}/${xtarget}/* ${xsysroot}/
     rmdir ${xsysroot}/${xtarget}
 
-    echo "--- compiler-rt ${xarch}/${xabi}${xlen}${fp} ---"
+    echo "--- compiler-rt ${xarch}/${xabi}${xlen}${xabix} ---"
     mkdir -p ${buildpath}/compiler-rt
     xcrtflags="${xcflags} -fdebug-prefix-map=/toolchain/llvm/compiler-rt=${prefix}/${xtarget}/compiler-rt"
     cd ${buildpath}/compiler-rt
@@ -135,11 +146,11 @@ for abi in ${ABIS}; do
       -DCMAKE_CROSSCOMPILING=ON                         \
       -DCMAKE_CXX_COMPILER_FORCED=TRUE                  \
       -DCMAKE_BUILD_TYPE=Release                        \
-      -DCMAKE_C_COMPILER=${CLANGPATH}/bin/clang       \
-      -DCMAKE_CXX_COMPILER=${CLANGPATH}/bin/clang++   \
-      -DCMAKE_LINKER=${CLANGPATH}/bin/clang           \
-      -DCMAKE_AR=${CLANGPATH}/bin/llvm-ar             \
-      -DCMAKE_RANLIB=${CLANGPATH}/bin/llvm-ranlib     \
+      -DCMAKE_C_COMPILER=${CLANGPATH}/bin/clang         \
+      -DCMAKE_CXX_COMPILER=${CLANGPATH}/bin/clang++     \
+      -DCMAKE_LINKER=${CLANGPATH}/bin/clang             \
+      -DCMAKE_AR=${CLANGPATH}/bin/llvm-ar               \
+      -DCMAKE_RANLIB=${CLANGPATH}/bin/llvm-ranlib       \
       -DCMAKE_C_COMPILER_TARGET=${xtarget}              \
       -DCMAKE_ASM_COMPILER_TARGET=${xtarget}            \
       -DCMAKE_SYSROOT=${xsysroot}                       \
@@ -148,7 +159,7 @@ for abi in ${ABIS}; do
       -DCMAKE_ASM_FLAGS="${xcrtflags}"                  \
       -DCMAKE_CXX_FLAGS="${xcrtflags}"                  \
       -DCMAKE_EXE_LINKER_FLAGS="-L${xsysroot}/lib"      \
-      -DLLVM_CONFIG_PATH=${CLANGPATH}/bin/llvm-config \
+      -DLLVM_CONFIG_PATH=${CLANGPATH}/bin/llvm-config   \
       -DLLVM_DEFAULT_TARGET_TRIPLE=${xtarget}           \
       -DLLVM_TARGETS_TO_BUILD=RISCV                     \
       -DLLVM_ENABLE_PIC=OFF                             \
