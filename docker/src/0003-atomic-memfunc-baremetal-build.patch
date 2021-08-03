@@ -1,0 +1,21 @@
+diff --git a/compiler-rt/lib/builtins/atomic.c b/compiler-rt/lib/builtins/atomic.c
+index f48cdc10ccf7..7f951da40a48 100644
+--- a/compiler-rt/lib/builtins/atomic.c
++++ b/compiler-rt/lib/builtins/atomic.c
+@@ -23,12 +23,15 @@
+ //
+ //===----------------------------------------------------------------------===//
+
++#include <stddef.h>
+ #include <stdbool.h>
+ #include <stdint.h>
+-#include <string.h>
+
+ #include "assembly.h"
+
++#define memcpy(_d_, _s_, _l_) __builtin_memcpy(_d_, _s_, _l_)
++#define memcmp(_d_, _s_, _l_) __builtin_memcmp(_d_, _s_, _l_)
++
+ // Clang objects if you redefine a builtin.  This little hack allows us to
+ // define a function with the same name as an intrinsic.
+ #pragma redefine_extname __atomic_load_c SYMBOL_NAME(__atomic_load)

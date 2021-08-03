@@ -104,42 +104,38 @@ cd ${DOCKER_TMPDIR} && \
 docker build -f newlib.dockerfile -t newlib-src:v${NEWLIB_VERSION} . \
     || die "Failed to download newlib"
 
-info "Build Binutils"
+# info "Build Binutils"
+# cd ${DOCKER_TMPDIR} && \
+# docker build -f binutils-riscv-sifive.dockerfile -t sifive/binutils-riscv:a${ALPINE_VER}-r${SI5_VER} . \
+#     || die "Failed to build Binutils"
+# info "Build GDB"
+# cd ${DOCKER_TMPDIR} && \
+# docker build -f gdb-riscv-sifive.dockerfile -t sifive/gdb-riscv:a${ALPINE_VER}-r${SI5_VER} . \
+#     || die "Failed to build GDB"
+# info "Build LLVM"
+# cd ${DOCKER_TMPDIR} && \
+# docker build -f llvm-riscv-sifive.dockerfile -t sifive/llvm-riscv:a${ALPINE_VER}-r${SI5_VER} . \
+#     || die "Failed to build LLVM toolchain"
+# info "Build LLVM nano"
+# cd ${DOCKER_TMPDIR} && \
+# docker build -f llvm-riscv-sifive-nano.dockerfile -t sifive/llvm-riscv-nano:a${ALPINE_VER}-r${SI5_VER} . \
+#     || die "Failed to build LLVM nano"
+# info "Creating Clang image"
+# cd ${DOCKER_TMPDIR} && \
+# docker build -f clang-riscv-sifive.dockerfile -t sifive/clang-riscv:a${ALPINE_VER}-r${SI5_VER} . \
+#     || die "Failed to create Clang image"
+#info "Build compiler_rt"
+#cd ${DOCKER_TMPDIR} && \
+#docker build -f compiler_rt-riscv-sifive.dockerfile -t sifive/compiler_rt-riscv:a${ALPINE_VER}-r${SI5_VER} . \
+#    || die "Failed to build compiler runtime"
+info "Build newlib"
 cd ${DOCKER_TMPDIR} && \
-docker build -f binutils-riscv-sifive.dockerfile -t sifive/binutils-riscv:a${ALPINE_VER}-r${SI5_VER} . \
-    || die "Failed to build Binutils"
-info "Build GDB"
-cd ${DOCKER_TMPDIR} && \
-docker build -f gdb-riscv-sifive.dockerfile -t sifive/gdb-riscv:a${ALPINE_VER}-r${SI5_VER} . \
-    || die "Failed to build GDB"
-info "Build LLVM"
-cd ${DOCKER_TMPDIR} && \
-docker build -f llvm-riscv-sifive.dockerfile -t sifive/llvm-riscv:a${ALPINE_VER}-r${SI5_VER} . \
-    || die "Failed to build LLVM toolchain"
-info "Build LLVM nano"
-cd ${DOCKER_TMPDIR} && \
-docker build -f llvm-riscv-sifive-nano.dockerfile -t sifive/llvm-riscv-nano:a${ALPINE_VER}-r${SI5_VER} . \
-    || die "Failed to build LLVM nano"
-info "Creating Clang image"
-cd ${DOCKER_TMPDIR} && \
-docker build -f clang-riscv-sifive.dockerfile -t sifive/clang-riscv:a${ALPINE_VER}-r${SI5_VER} . \
-    || die "Failed to create Clang image"
-info "Build C runtime (RV32, default)"
-cd ${DOCKER_TMPDIR} && \
-docker build -f clang-riscv32-sifive.dockerfile -t sifive/clang-riscv32:a${ALPINE_VER}-r${SI5_VER}-n${NEWLIB_VER} . \
-    || die "Failed to build C runtime"
-info "Build C runtime (RV64, default)"
-cd ${DOCKER_TMPDIR} && \
-docker build -f clang-riscv64-sifive.dockerfile -t sifive/clang-riscv64:a${ALPINE_VER}-r${SI5_VER}-n${NEWLIB_VER} . \
-    || die "Failed to build C runtime"
-info "Build C runtime (RV32, debug)"
-cd ${DOCKER_TMPDIR} && \
-docker build -f clang-riscv32-sifive-dbg.dockerfile -t sifive/clang-riscv32_dbg:a${ALPINE_VER}-r${SI5_VER}-n${NEWLIB_VER} . \
-    || die "Failed to build C runtime"
-info "Build C runtime (RV64, debug)"
-cd ${DOCKER_TMPDIR} && \
-docker build -f clang-riscv64-sifive-dbg.dockerfile -t sifive/clang-riscv64_dbg:a${ALPINE_VER}-r${SI5_VER}-n${NEWLIB_VER} . \
-    || die "Failed to build C runtime"
-info "Build GCC toolchain"
-cd ${DOCKER_TMPDIR} && \
-docker build -f gcc-riscv-sifive.dockerfile -t sifive/gcc-riscv:a${ALPINE_VER}-r${SI5_VER} .
+docker build -f newlib-riscv-sifive.dockerfile -t sifive/newlib-riscv:a${ALPINE_VER}-r${SI5_VER}-n${NEWLIB_VER} . \
+    || die "Failed to build newlib"
+# info "Build C runtime (RV32, debug)"
+# cd ${DOCKER_TMPDIR} && \
+# docker build -f clang-riscv32-sifive-dbg.dockerfile -t sifive/clang-riscv32_dbg:a${ALPINE_VER}-r${SI5_VER}-n${NEWLIB_VER} . \
+#     || die "Failed to build newlib"
+# info "Build GCC toolchain"
+# cd ${DOCKER_TMPDIR} && \
+# docker build -f gcc-riscv-sifive.dockerfile -t sifive/gcc-riscv:a${ALPINE_VER}-r${SI5_VER} .
