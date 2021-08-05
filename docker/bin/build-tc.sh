@@ -44,22 +44,7 @@ for df in ${dockfiles}; do
             -e "s/@ALPINE_VERSION@/$ALPINE_VERSION/g" \
             -e "s/@NEWLIB_VER@/n$NEWLIB_VER/g" \
             -e "s/@NEWLIB_VERSION@/$NEWLIB_VERSION/g" \
-            -e "s/@BUILD@/RELEASE/g" \
     > ${DOCKER_TMPDIR}/$df || die "Cannot generate $df"
-    echo "$df" | grep -Eq "clang-riscv[0-9][0-9]-sifive.dockerfile"
-    if [ $? -eq 0 ]; then
-        ddf=$(echo "$df" | sed "s/.dockerfile$/-dbg.dockerfile/")
-        info "Creating $ddf"
-        cat docker/src/$df | \
-            sed -e "s/@SI5_VER@/r$SI5_VER/g" \
-                -e "s/@SI5_BRANCH@/$SI5_VER/g" \
-                -e "s/@ALPINE_VER@/a$ALPINE_VER/g" \
-                -e "s/@ALPINE_VERSION@/$ALPINE_VERSION/g" \
-                -e "s/@NEWLIB_VER@/n$NEWLIB_VER/g" \
-                -e "s/@NEWLIB_VERSION@/$NEWLIB_VERSION/g" \
-                -e "s/@BUILD@/DEBUG/g" \
-        > ${DOCKER_TMPDIR}/$ddf || die "Cannot generate $ddf"
-    fi
 done
 
 cat $(dirname $0)/push.sh | \
@@ -69,7 +54,6 @@ cat $(dirname $0)/push.sh | \
         -e "s/@ALPINE_VERSION@/$ALPINE_VERSION/g" \
         -e "s/@NEWLIB_VER@/n$NEWLIB_VER/g" \
         -e "s/@NEWLIB_VERSION@/$NEWLIB_VERSION/g" \
-        -e "s/@BUILD@/RELEASE/g" \
 > ${DOCKER_TMPDIR}/push.sh || die "Cannot generate push.sh"
 
 # copy static files
@@ -108,34 +92,51 @@ docker build -f newlib.dockerfile -t newlib-src:v${NEWLIB_VERSION} . \
 # cd ${DOCKER_TMPDIR} && \
 # docker build -f binutils-riscv-sifive.dockerfile -t sifive/binutils-riscv:a${ALPINE_VER}-r${SI5_VER} . \
 #     || die "Failed to build Binutils"
+
 # info "Build GDB"
 # cd ${DOCKER_TMPDIR} && \
 # docker build -f gdb-riscv-sifive.dockerfile -t sifive/gdb-riscv:a${ALPINE_VER}-r${SI5_VER} . \
 #     || die "Failed to build GDB"
+
 # info "Build LLVM"
 # cd ${DOCKER_TMPDIR} && \
 # docker build -f llvm-riscv-sifive.dockerfile -t sifive/llvm-riscv:a${ALPINE_VER}-r${SI5_VER} . \
 #     || die "Failed to build LLVM toolchain"
+
 # info "Build LLVM nano"
 # cd ${DOCKER_TMPDIR} && \
 # docker build -f llvm-riscv-sifive-nano.dockerfile -t sifive/llvm-riscv-nano:a${ALPINE_VER}-r${SI5_VER} . \
 #     || die "Failed to build LLVM nano"
+
 # info "Creating Clang image"
 # cd ${DOCKER_TMPDIR} && \
 # docker build -f clang-riscv-sifive.dockerfile -t sifive/clang-riscv:a${ALPINE_VER}-r${SI5_VER} . \
 #     || die "Failed to create Clang image"
-#info "Build compiler_rt"
+
+#info "Build compiler_rt (release)"
 #cd ${DOCKER_TMPDIR} && \
-#docker build -f compiler_rt-riscv-sifive.dockerfile -t sifive/compiler_rt-riscv:a${ALPINE_VER}-r${SI5_VER} . \
+#docker build -f compiler_rt-riscv-sifive.dockerfile --build-arg BUILD=RELEASE \
+#    -t sifive/compiler_rt-riscv:a${ALPINE_VER}-r${SI5_VER} . \
 #    || die "Failed to build compiler runtime"
-info "Build newlib"
+
+#info "Build compiler_rt (debug)"
+#cd ${DOCKER_TMPDIR} && \
+#docker build -f compiler_rt-riscv-sifive.dockerfile --build-arg BUILD=DEBUG \
+#    -t sifive/compiler_rt-riscv_dbg:a${ALPINE_VER}-r${SI5_VER} . \
+#    || die "Failed to build compiler runtime"
+
+#info "Build newlib (release)"
+#cd ${DOCKER_TMPDIR} && \
+#docker build -f newlib-riscv-sifive.dockerfile --build-arg BUILD=RELEASE \
+#    -t sifive/newlib-riscv:a${ALPINE_VER}-r${SI5_VER}-n${NEWLIB_VER} . \
+#    || die "Failed to build newlib"
+
+info "Build newlib (debug)"
 cd ${DOCKER_TMPDIR} && \
-docker build -f newlib-riscv-sifive.dockerfile -t sifive/newlib-riscv:a${ALPINE_VER}-r${SI5_VER}-n${NEWLIB_VER} . \
+docker build -f newlib-riscv-sifive.dockerfile --build-arg BUILD=DEBUG \
+    -t sifive/newlib-riscv_dbg:a${ALPINE_VER}-r${SI5_VER}-n${NEWLIB_VER} . \
     || die "Failed to build newlib"
-# info "Build C runtime (RV32, debug)"
-# cd ${DOCKER_TMPDIR} && \
-# docker build -f clang-riscv32-sifive-dbg.dockerfile -t sifive/clang-riscv32_dbg:a${ALPINE_VER}-r${SI5_VER}-n${NEWLIB_VER} . \
-#     || die "Failed to build newlib"
+
 # info "Build GCC toolchain"
 # cd ${DOCKER_TMPDIR} && \
 # docker build -f gcc-riscv-sifive.dockerfile -t sifive/gcc-riscv:a${ALPINE_VER}-r${SI5_VER} .

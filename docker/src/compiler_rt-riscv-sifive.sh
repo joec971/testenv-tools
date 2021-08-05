@@ -80,7 +80,7 @@ for xlen in ${XLENS}; do
 
         echo "--- compiler-rt ${xarch}/${xabi}${xlen}${xabix} ---"
         mkdir -p ${buildpath}/compiler-rt
-        xcrtflags="${xcflags} -fdebug-prefix-map=/toolchain/llvm/compiler-rt=${prefix}/${xtarget}/compiler-rt"
+        xcrtflags="${xcflags} -fdebug-prefix-map=/toolchain/llvm/compiler-rt/lib=${prefix}/${clang_version}/src/compiler-rt"
         cd ${buildpath}/compiler-rt
         cmake                                               \
           -G Ninja                                          \
@@ -130,7 +130,7 @@ for xlen in ${XLENS}; do
             # extract the list of actually used source files, so they can be copied
             # into the destination tree (so that it is possible to step-debug in
             # the system libraries)
-            llvm-dwarfdump ${xsysroot}/lib/*.a | grep DW_AT_decl_file | \
+            llvm-dwarfdump ${xsysroot}/*.a | grep DW_AT_decl_file | \
             tr -d ' ' | cut -d'"' -f2 >> ${buildpath}/srcfiles.tmp
         fi
     done # isa
@@ -138,10 +138,12 @@ done # xlen
 
 if [ ${debug_build} -ne 0 ]; then
     echo "--- library source files ---"
+    sort -u ${buildpath}/srcfiles.tmp | grep -E '/compiler-rt/'
     sort -u ${buildpath}/srcfiles.tmp | grep -E '/compiler-rt/' |
-      sed "s%^${prefix}/${xtarget}/%%" > ${buildpath}/compiler-rt.files
+      sed "s%^${prefix}/${clang_version}/src/compiler-rt/%%" > ${buildpath}/compiler-rt.files
     sort -u ${buildpath}/srcfiles.tmp
     rm ${buildpath}/srcfiles.tmp
-    tar cf - -C /toolchain/llvm -T ${buildpath}/compiler-rt.files | \
-      tar xf - -C ${prefix}/${xtarget}
+    mkdir -p ${prefix}/${clang_version}/src/compiler-rt
+    tar cf - -C /toolchain/llvm/compiler-rt/lib -T ${buildpath}/compiler-rt.files | \
+      tar xf - -C ${prefix}/${clang_version}/src/compiler-rt
 fi

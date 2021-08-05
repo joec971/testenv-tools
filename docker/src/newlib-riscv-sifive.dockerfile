@@ -9,7 +9,8 @@ WORKDIR /toolchain
 
 ENV CLANGPATH=/usr/local/clang
 # if build=DEBUG, generated library are built with -g -Og, otherwise -Os
-ENV build=@BUILD@
+ARG BUILD
+ENV build=${BUILD}
 ENV prefix=${CLANGPATH}/riscv64-unknown-elf
 
 RUN ln -s /usr/bin/python3 /usr/bin/python

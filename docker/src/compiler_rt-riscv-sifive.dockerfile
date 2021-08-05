@@ -4,12 +4,13 @@ FROM sifive/llvm-riscv:@ALPINE_VER@-@SI5_VER@ as builder
 RUN apk update
 RUN apk upgrade
 RUN apk add build-base samurai cmake git patch vim python3 coreutils
-COPY --from=clang /toolchain/llvm /toolchain/llvm
+COPY --from=clang /toolchain/llvm/compiler-rt /toolchain/llvm/compiler-rt
 WORKDIR /toolchain
 
 ENV CLANGPATH=/usr/local/clang
 # if build=DEBUG, generated library are built with -g -Og, otherwise -Os
-ENV build=@BUILD@
+ARG BUILD
+ENV build=${BUILD}
 ENV prefix=${CLANGPATH}/lib/clang
 
 RUN ln -s /usr/bin/python3 /usr/bin/python

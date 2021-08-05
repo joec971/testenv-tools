@@ -110,7 +110,6 @@ for xlen in ${XLENS}; do
         xctarget="-march=${xarch} -mabi=${xabi}${xlen}${xabix} ${xmodel}"
         xarchdir="$(echo ${xarch} | sed -E 's/0p[0-9]+//g')"
         xtarget="riscv${xlen}-unknown-elf"
-        xsysroot="${prefix}/${xarchdir}/${xabi}${xlen}${xabix}"
         xcflags="${xctarget} ${xopts} ${xcfeatures}"
         buildpath="/toolchain/build"
 
@@ -124,7 +123,7 @@ for xlen in ${XLENS}; do
 
         echo "--- newlib ${xarch}/${xabi}${xlen}${xabix} ---"
         mkdir -p ${buildpath}/newlib
-        xncflags="${xcflags} -fdebug-prefix-map=/toolchain/newlib=${prefix}/${xtarget}"
+        xncflags="${xcflags} -fdebug-prefix-map=/toolchain/newlib=${prefix}/src"
         export CFLAGS_FOR_TARGET="-target ${xtarget} ${xncflags} -Wno-unused-command-line-argument"
         cd ${buildpath}/newlib
         /toolchain/newlib/configure  \
@@ -153,8 +152,9 @@ for xlen in ${XLENS}; do
             # extract the list of actually used source files, so they can be copied
             # into the destination tree (so that it is possible to step-debug in
             # the system libraries)
-            llvm-dwarfdump ${xsysroot}/lib/*.a | grep DW_AT_decl_file | \
-            tr -d ' ' | cut -d'"' -f2 >> ${buildpath}/srcfiles.tmp
+            llvm-dwarfdump ${prefix}/lib/${xarchdir}/${xabi}${xlen}${xabix}/*.a | \
+                grep DW_AT_decl_file | tr -d ' ' | cut -d'"' -f2 \
+                    >> ${buildpath}/srcfiles.tmp
         fi
     done # isa
 done # xlen
@@ -164,10 +164,11 @@ if [ ${debug_build} -ne 0 ]; then
     # as an additional directory level
     echo "--- library source files ---"
     sort -u ${buildpath}/srcfiles.tmp | grep -E '/(newlib|libgloss)/' | \
-      sed "s%^${prefix}/${xtarget}/%%" |
+      sed "s%^${prefix}/src/%%" |
       (cd /toolchain/newlib; xargs -n 1 realpath --relative-to .) \
          > ${buildpath}/newlib.files
     rm ${buildpath}/srcfiles.tmp
+    mkdir -p ${prefix}/src
     tar cf - -C /toolchain/newlib -T ${buildpath}/newlib.files | \
-      tar xf - -C ${prefix}/${xtarget}
+      tar xf - -C ${prefix}/src
 fi
